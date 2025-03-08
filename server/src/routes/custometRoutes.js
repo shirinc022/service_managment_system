@@ -1,4 +1,5 @@
-const { customerRegister, customerLogin, customerLogout } = require('../controllers/customerController')
+const { customerRegister, customerLogin, customerLogout, placeRequest } = require('../controllers/customerController')
+const authCustomer = require('../middleware/customerAuth')
 
 
 const customerRoutes=require('express').Router()
@@ -6,6 +7,11 @@ const customerRoutes=require('express').Router()
 customerRoutes.post('/register',customerRegister)
 customerRoutes.post('/login',customerLogin)
 customerRoutes.post('/logout',customerLogout)
+//service request
+
+
+
+
 //orders
 // customerRoutes.get('/orders',orderView)
 //review

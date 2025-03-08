@@ -1,7 +1,8 @@
+const orderModel = require("../models/orderModel");
 const providerDb = require("../models/providerModel");
 const serviceModel = require("../models/serviceModel");
 const { createToken, createProviderToken } = require("../utils/generateToken");
-const { uploadToCloudinary } = require("../utils/imageUpload");
+const { uploadToCloudinary, uploadSinglefileToCloudinary } = require("../utils/imageUpload");
 const { hashpassword, comparePassword } = require("../utils/passwordUtil");
 
 const providerRegister = async (req, res) => {
@@ -21,7 +22,8 @@ const providerRegister = async (req, res) => {
     }
 
     const hashedPassword = await hashpassword(password);
-    const cloudinaryRes = await uploadToCloudinary(req.file.path);
+    const cloudinaryRes = await uploadSinglefileToCloudinary(req.file.path);
+    
     console.log(cloudinaryRes, "image uploaded to cloudinary");
     const newProvider = new providerDb({
       name,
@@ -58,15 +60,15 @@ const providerLogin = async (req, res) => {
       password,
       providerExist.password
     );
-    // console.log(passwordMatch);
+
     if (!passwordMatch) {
       return res.status(400).json({ message: "Invalid password" });
     }
     const verified=providerExist.verification_status
-    console.log(verified)
+    
     const token = createProviderToken(providerExist._id, "provider",verified);
     res.cookie("provider_token", token);
-    // console.log(token);
+  
     res
       .status(200)
       .json({ message: "Provider login successful", providerExist });
@@ -205,17 +207,35 @@ const serviceDelete = async (req, res) => {
   }
 };
 
+
+
+
+
 const getServices = async (req, res) => {
   try {
-    const services = await serviceModel.find();
-    return res.status(200).json({ message: "Listed All services", services });
+    // Find services and populate the provider_id, reviews, and customer details within reviews
+    const services = await serviceModel
+      .find()
+      .populate("provider_id")  // Populate the provider details for each service
+      // .populate("reviews");
+
+    // Return the services with the populated data
+    return res.status(200).json({ message: "Listed All Services", services });
   } catch (error) {
     console.log(error);
     res
       .status(error.status || 500)
-      .json({ error: error.message || "internal server error" });
+      .json({ error: error.message || "Internal server error" });
   }
 };
+
+
+
+
+
+
+
+
 
 module.exports = {
   providerRegister,
@@ -225,5 +245,5 @@ module.exports = {
   serviceUpdate,
   serviceView,
   serviceDelete,
-  getServices,
+  getServices
 };

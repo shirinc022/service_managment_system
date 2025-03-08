@@ -1,4 +1,6 @@
 const customerDb = require("../models/customerModel");
+const orderModel = require("../models/orderModel");
+const serviceModel = require("../models/serviceModel");
 const { createToken } = require("../utils/generateToken");
 const { hashpassword, comparePassword } = require("../utils/passwordUtil");
 
@@ -70,6 +72,9 @@ const customerLogout = async (req,res)=>{
         res.status(error.status || 500).json({error:error.message || "internal server error"})
     }
 }
+
+
+
 
 
 module.exports={customerRegister,customerLogin,customerLogout}

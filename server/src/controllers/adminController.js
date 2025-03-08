@@ -1,4 +1,6 @@
 const adminDb = require("../models/adminModel");
+const customerModel = require("../models/customerModel");
+const orderModel = require("../models/orderModel");
 const providerModel = require("../models/providerModel");
 const { createToken } = require("../utils/generateToken");
 const { hashpassword, comparePassword } = require("../utils/passwordUtil");
@@ -51,7 +53,6 @@ const adminLogin = async (req, res) => {
     }
     const token = createToken(adminExist._id, "admin");
     res.cookie("Admin_token", token);
-    console.log(token);
     res.status(200).json({ message: "Admin login successful", adminExist });
   } catch (error) {
     console.log(error);
@@ -89,8 +90,65 @@ const adminVerifyProvider= async (req, res) => {
   }
 };
 
+const getCustomers = async(req,res)=>{
+  try{
+
+    const customers= await  customerModel.find()
+    if(!customers){
+      return res.status(400).json({ error: "customers not found" });
+    }
+    res.status(200).json(customers)
 
 
 
+  } catch (error) {
+    console.log(error);
+    res
+      .status(error.status || 500)
+      .json({ error: error.message || "internal server error" });
+  }
+}
 
-module.exports = { adminRegister, adminLogin, adminLogout , adminVerifyProvider};
+
+const getProviders = async(req,res)=>{
+  try{
+
+    const providers= await  providerModel.find()
+    if(!providers){
+      return res.status(400).json({ error: "providers not found" });
+    }
+    res.status(200).json(providers)
+
+
+
+  } catch (error) {
+    console.log(error);
+    res
+      .status(error.status || 500)
+      .json({ error: error.message || "internal server error" });
+  }
+}
+
+
+const getOrdersView = async(req,res)=>{
+  try{
+
+    const orders= await  orderModel.find()
+    if(!orders){
+      return res.status(400).json({ error: "orders not found" });
+    }
+    res.status(200).json(orders)
+
+
+
+  } catch (error) {
+    console.log(error);
+    res
+      .status(error.status || 500)
+      .json({ error: error.message || "internal server error" });
+  }
+}
+
+
+
+module.exports = { adminRegister, adminLogin, adminLogout , adminVerifyProvider,getCustomers,getProviders,getOrdersView};
