@@ -33,3 +33,15 @@ export const providerSignup = (data) =>{
 export const customerSignup = (data) =>{
     return axiosInstance.post('/customer/register',data)
 }
+
+export const customerLogout = () =>{
+    return axiosInstance.post('/customer/logout')
+}
+
+export const providerLogout = () =>{
+    return axiosInstance.post('/provider/logout')
+}
+
+export const adminLogout = () =>{
+    return axiosInstance.post('/admin/logout')
+}

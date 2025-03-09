@@ -2,9 +2,56 @@ import React from "react";
 import Darkmode from "./Darkmode";
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from "react-redux";
+import { FaUser } from "react-icons/fa";
+import { adminLogout, customerLogout, providerLogout } from "../../services/userservices";
+import { clearUser } from "../../redux/Slices/userSlice";
 
 function Header() {
 const navigate = useNavigate()
+const userData = useSelector((state) => state.user)
+    const dispatch=useDispatch()
+
+
+    const handledashboard=()=>{
+      if(userData.user.role == "customer"){
+        navigate("/customer-dashboard")
+      }else if(userData.user.role == "provider"){
+        navigate('/provider-dashboard')
+      }else if(userData.user.role == "admin"){
+        navigate('/admin-dashboard')
+      }else {
+        navigate('/')
+      }
+    }
+
+        const handleLogout = ()=>{
+            try{
+              let userLogout;
+              if(userData.user.role == "customer"){
+                userLogout=customerLogout()
+               
+              }else if(userData.user.role == "provider"){
+                userLogout=providerLogout()
+              }else if(userData.user.role == "admin"){
+                userLogout=adminLogout()
+              }else {
+                navigate('/')
+              }
+
+              userLogout.then((res)=>{
+                // persistor.purge()
+                dispatch(clearUser())
+                navigate('/')
+            })
+            }
+                
+    
+            catch(error){
+                console.log('error')
+            }
+        }
+    
 
 
 
@@ -67,7 +114,13 @@ const navigate = useNavigate()
         </div>
 
         <div>
-        <a className="btn" onClick={()=>navigate('/login')}>Join Us</a>
+        {userData.user && Object.keys(userData.user).length > 0 ?  <div className='gap-2 flex items-center space-x-3'>
+    <button className="cursor-pointer" onClick={handledashboard}><span className="flex items-center gap-1"><FaUser />{userData.user.name}</span></button>
+ 
+    <button className='btn' onClick={handleLogout} >Logout</button>
+    </div> :
+    <a className="btn" onClick={()=>navigate('/login')}>Join Us</a>
+}
         </div>
       </div>
     </div>

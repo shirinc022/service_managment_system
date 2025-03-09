@@ -2,13 +2,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-// import { useDispatch } from 'react-redux';
-// import { saveUser } from '../../redux/features/userSlice';
+import { useDispatch } from 'react-redux';
+
 import { adminLogin, providerLogin, customerLogin } from '../../services/userservices';
+import { saveUser } from '../../redux/Slices/userSlice';
 
 function Login() {
     const navigate = useNavigate();
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const [values, setValues] = useState({
         email: "",
@@ -52,9 +53,9 @@ function Login() {
                     return;
             }
             loginFunction(values).then((res) => {
-                console.log(res);
+                console.log(res.data.user);
                 toast.success('Login Successful');
-                // dispatch(saveUser(res.data.userExist));
+                dispatch(saveUser(res.data.user));
                 switch (values.userType) {
                   case 'admin':
                       navigate('/admin-dashboard');
@@ -69,7 +70,7 @@ function Login() {
                       navigate('/');
                       break;
               }
-                // navigate('/customer-dashboard');
+              
             }).catch((err) => {
                 console.log(err);
                 toast.error(err.response.data.error, {

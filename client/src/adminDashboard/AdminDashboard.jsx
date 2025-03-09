@@ -1,9 +1,15 @@
 import React from 'react'
 import { useState } from "react";
 import { FaShoppingCart, FaCreditCard, FaUser, FaSignOutAlt } from "react-icons/fa";
+import { adminLogout } from '../services/userservices';
+import { clearUser } from '../redux/Slices/userSlice';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function AdminDashboard() {
         const [activeMenu, setActiveMenu] = useState("orders");
+        const dispatch =useDispatch()
+        const navigate = useNavigate()
     
         const renderContent = () => {
           switch (activeMenu) {
@@ -17,6 +23,19 @@ function AdminDashboard() {
               return <h1 className="text-xl">Select a section</h1>;
           }
         };
+
+        
+          const handleLogout = () => {
+            try {
+              adminLogout().then((res) => {
+                // persistor.purge()
+                dispatch(clearUser());
+                navigate('/');
+              });
+            } catch (error) {
+              console.log("error");
+            }
+          };
     
    return (
       <div className="flex h-screen">
@@ -46,7 +65,7 @@ function AdminDashboard() {
             label="Logout" 
             icon={<FaSignOutAlt />} 
             isActive={false} 
-            onClick={() => console.log("Logout clicked")}
+            onClick={handleLogout}
             isLogout
           />
         </ul>
@@ -64,7 +83,7 @@ function AdminDashboard() {
     <li>
       <button
         onClick={onClick}
-        className={`flex items-center gap-2 p-2 w-full text-left rounded transition-colors 
+        className={`flex items-center gap-2 p-2 w-full text-left rounded transition-colors cursor-pointer
           ${isActive ? "bg-blue-500 text-white" : "hover:bg-gray-700"} 
           ${isLogout ? "hover:bg-red-600" : ""}`}
       >

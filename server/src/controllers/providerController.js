@@ -71,7 +71,7 @@ const providerLogin = async (req, res) => {
   
     res
       .status(200)
-      .json({ message: "Provider login successful", providerExist });
+      .json({ message: "Provider login successful", user:providerExist });
   } catch (error) {
     console.log(error);
     res

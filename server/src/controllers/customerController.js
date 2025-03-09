@@ -55,7 +55,7 @@ const customerLogin=async(req,res)=>{
         const token = createToken(customerExist._id,"customer")
         res.cookie("customer_token",token)
         console.log(token)
-        res.status(200).json({message:"Customer login successful",customerExist})
+        res.status(200).json({message:"Customer login successful",user:customerExist})
      }catch(error){
          console.log(error);
          res.status(error.status || 500).json({error:error.message || "internal server error"})

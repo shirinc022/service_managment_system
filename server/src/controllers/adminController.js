@@ -53,7 +53,7 @@ const adminLogin = async (req, res) => {
     }
     const token = createToken(adminExist._id, "admin");
     res.cookie("Admin_token", token);
-    res.status(200).json({ message: "Admin login successful", adminExist });
+    res.status(200).json({ message: "Admin login successful", user:adminExist });
   } catch (error) {
     console.log(error);
     res
