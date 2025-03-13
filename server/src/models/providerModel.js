@@ -8,7 +8,7 @@ const providerSchema=new mongoose.Schema({
         phone: { type: Number, required: true },
         document:{type:String,required: true},
         role:{type:String,required:true,default:"provider"},
-        verification_status:{type:Boolean,default:"false"}
+        verification_status:{type: String, enum: ['Pending', 'Verified', 'Rejected'],default:"Pending"}
     },{timestamps:true});
 
 

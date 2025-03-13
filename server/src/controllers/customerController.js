@@ -45,12 +45,12 @@ const customerLogin=async(req,res)=>{
         }
         const customerExist =await customerDb.findOne({email})
         if(!customerExist){
-         return res.status(400).json({message:"Customer not found"})
+         return res.status(400).json({error:"Customer not found"})
         }
         const passwordMatch=await comparePassword(password,customerExist.password)
         console.log(passwordMatch)
         if(!passwordMatch){
-         return res.status(400).json({message:"Invalid password"})
+         return res.status(400).json({error:"Invalid password"})
         }
         const token = createToken(customerExist._id,"customer")
         res.cookie("customer_token",token)

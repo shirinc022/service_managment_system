@@ -8,6 +8,9 @@ import Signup from '../pages/Signup';
 import CustomerDashboard from '../../customerDashboard/CustomerDashboard';
 import ProviderDashboard from '../../providerDashboard/ProviderDashboard';
 import AdminDashboard from '../../adminDashboard/AdminDashboard';
+import ServiceDetailPage from '../pages/ServiceDetailPage';
+import AddService from '../../providerDashboard/AddService';
+import UpdateService from '../../providerDashboard/UpdateService';
 
 export const router  = createBrowserRouter([
         {
@@ -42,6 +45,18 @@ export const router  = createBrowserRouter([
             {
               path: "admin-dashboard",
               element: <AdminDashboard/>,
+            },
+            {
+              path: "service-detail/:serviceId",
+              element: <ServiceDetailPage/>,
+            },
+            {
+              path: "add-service",
+              element: <AddService/>,
+            },
+            {
+              path: "update-service/:serviceId",
+              element: <UpdateService/>,
             },
            
           ],

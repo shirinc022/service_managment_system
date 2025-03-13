@@ -1,22 +1,27 @@
 import React from 'react'
 import { useState } from "react";
-import { FaShoppingCart, FaCreditCard, FaUser, FaSignOutAlt } from "react-icons/fa";
+import { FaShoppingCart, FaCreditCard, FaUser, FaSignOutAlt, FaUsers, FaUserCheck } from "react-icons/fa";
 import { adminLogout } from '../services/userservices';
 import { clearUser } from '../redux/Slices/userSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import CustomerTable from './CustomerTable';
+import ProviderTable from './ProviderTable';
+import OrdersTable from './OrderTable';
 
 function AdminDashboard() {
-        const [activeMenu, setActiveMenu] = useState("orders");
+        const [activeMenu, setActiveMenu] = useState("provider");
         const dispatch =useDispatch()
         const navigate = useNavigate()
     
         const renderContent = () => {
           switch (activeMenu) {
-            case "orders":
-              return <Orders />;
-            case "payments":
-              return <Payments />;
+            case "customers":
+              return <Customers />;
+            case "provider":
+              return <Provider />;
+              case "order":
+              return <Order />;
             case "profile":
               return <Profile />;
             default:
@@ -43,18 +48,25 @@ function AdminDashboard() {
       <div className="w-64 bg-gray-900 text-white p-4">
         <h2 className="text-xl font-bold mb-6 text-center">Admin Dashboard</h2>
         <ul className="space-y-4">
+        <MenuItem 
+            label="Providers" 
+            icon={<FaUserCheck />} 
+            isActive={activeMenu === "provider"} 
+            onClick={() => setActiveMenu("provider")}
+          />
+          <MenuItem 
+            label="Customers" 
+            icon={<FaUsers />} 
+            isActive={activeMenu === "customers"} 
+            onClick={() => setActiveMenu("customers")}
+          />
           <MenuItem 
             label="Orders" 
             icon={<FaShoppingCart />} 
-            isActive={activeMenu === "orders"} 
-            onClick={() => setActiveMenu("orders")}
+            isActive={activeMenu === "order"} 
+            onClick={() => setActiveMenu("order")}
           />
-          <MenuItem 
-            label="Payments" 
-            icon={<FaCreditCard />} 
-            isActive={activeMenu === "payments"} 
-            onClick={() => setActiveMenu("payments")}
-          />
+          
           <MenuItem 
             label="Profile" 
             icon={<FaUser />} 
@@ -93,25 +105,29 @@ function AdminDashboard() {
   );
   }
   
-  // Orders Component
-  function Orders() {
+  // Customer Component
+  function Customers() {
   return (
-    <div className="p-6 bg-white text-gray-900 shadow-md rounded">
-      <h1 className="text-2xl font-bold">My Orders</h1>
-      <p className="mt-4">View your past and current orders.</p>
-    </div>
+  
+      
+      <CustomerTable/>
+
   );
   }
   
-  // Payments Component
-  function Payments() {
+  // Provider Component
+  function Provider() {
   return (
-    <div className="p-6 bg-white text-gray-900 shadow-md rounded">
-      <h1 className="text-2xl font-bold">Payments</h1>
-      <p className="mt-4">Manage your payment methods and transactions.</p>
-    </div>
+    <ProviderTable />
   );
   }
+
+    // Order Component
+    function Order() {
+      return (
+        <OrdersTable />
+      );
+      }
   
   // Profile Component
   function Profile() {

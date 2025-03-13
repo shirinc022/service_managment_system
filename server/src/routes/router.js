@@ -1,5 +1,5 @@
 // const { loginUser } = require('../controllers/loginController')
-const { getServices } = require('../controllers/providerController')
+const { getServices, getOneService } = require('../controllers/providerController')
 const adminRoutes = require('./adminRoutes')
 const customerRoutes = require('./custometRoutes')
 const orderRoutes = require('./orderRoutes')
@@ -21,7 +21,8 @@ router.use('/review',reviewRoutes)
 
 
 router.get('/services',getServices)
-// router.post('/login',loginUser)
+router.get('/service/:serviceId',getOneService)
+
 
 
 

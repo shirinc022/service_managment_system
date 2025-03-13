@@ -1,4 +1,4 @@
-const { providerRegister, providerLogin, providerLogout, serviceAdd, serviceUpdate, serviceView, serviceDelete, getOrders } = require('../controllers/providerController')
+const { providerRegister, providerLogin, providerLogout, serviceAdd, serviceUpdate, serviceView, serviceDelete, getOrders, allProviderServiceView } = require('../controllers/providerController')
 const { upload } = require('../middleware/multer')
 const authProvider = require('../middleware/providerAuth')
 
@@ -8,8 +8,10 @@ providerRoutes.post('/register',upload.single("document"),providerRegister)
 providerRoutes.post('/login',providerLogin)
 providerRoutes.post('/logout',providerLogout)
 providerRoutes.post('/service',authProvider,upload.array("images"),serviceAdd)
-providerRoutes.put('/service/:id',authProvider,upload.array("images"),serviceUpdate)
+providerRoutes.put('/service/:serviceId',authProvider,upload.array("images"),serviceUpdate)
 providerRoutes.get('/service/:id',authProvider,serviceView)
+providerRoutes.get('/allservices',authProvider,allProviderServiceView)
+
 providerRoutes.delete('/service/:id',authProvider,serviceDelete)
 
 

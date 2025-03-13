@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 function Darkmode() {
    const [toggle, setToggle]=useState(false)
-      document.querySelector("html").setAttribute("data-theme",toggle? 'light' :'dark')
+      document.querySelector("html").setAttribute("data-theme",toggle? 'dark' :'light')
       const handleToggle=()=>{
           setToggle(!toggle)
       }
@@ -14,25 +14,7 @@ function Darkmode() {
       className="theme-controller"
       onClick={handleToggle}
     />
-
-    
-
-    <svg
-      aria-label="moon"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-    >
-      <g
-        strokeLinejoin="round"
-        strokeLinecap="round"
-        strokeWidth="2"
-        fill="none"
-        stroke="currentColor"
-      >
-        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-      </g>
-    </svg>
-    <svg
+   <svg
       aria-label="sun"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
@@ -55,6 +37,24 @@ function Darkmode() {
         <path d="m19.07 4.93-1.41 1.41"></path>
       </g>
     </svg>
+    
+
+    <svg
+      aria-label="moon"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+    >
+      <g
+        strokeLinejoin="round"
+        strokeLinecap="round"
+        strokeWidth="2"
+        fill="none"
+        stroke="currentColor"
+      >
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+      </g>
+    </svg>
+ 
   </label>
   )
 }

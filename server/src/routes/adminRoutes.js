@@ -1,4 +1,4 @@
-const { adminLogin, adminRegister, adminLogout, adminVerifyProvider, getCustomers, getProviders, getOrdersView } = require('../controllers/adminController')
+const { adminLogin, adminRegister, adminLogout, adminVerifyProvider, getCustomers, getProviders, getOrdersView, adminRejectProvider } = require('../controllers/adminController')
 
 const authAdmin = require('../middleware/adminAuth')
 
@@ -8,6 +8,8 @@ adminRoutes.post('/register',adminRegister)
 adminRoutes.post('/login',adminLogin)
 adminRoutes.post('/logout',adminLogout)
 adminRoutes.put('/verify/:providerId',authAdmin,adminVerifyProvider)
+adminRoutes.put('/reject/:providerId',authAdmin,adminRejectProvider)
+
 
 
 adminRoutes.get('/customers',authAdmin,getCustomers)

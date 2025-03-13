@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaUser } from "react-icons/fa";
 import { adminLogout, customerLogout, providerLogout } from "../../services/userservices";
 import { clearUser } from "../../redux/Slices/userSlice";
+import { persistor } from "../../redux/store";
 
 function Header() {
 const navigate = useNavigate()
@@ -40,7 +41,7 @@ const userData = useSelector((state) => state.user)
               }
 
               userLogout.then((res)=>{
-                // persistor.purge()
+                persistor.purge()
                 dispatch(clearUser())
                 navigate('/')
             })

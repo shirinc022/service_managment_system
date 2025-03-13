@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const serviceSchema=new mongoose.Schema({
         provider_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Providers' ,required: true},
-        reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Reviews" }],
+        // reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Reviews" }],
         title: { type: String, required: true},
         category: { type: String, required: true},
         description: { type: String, required: true },

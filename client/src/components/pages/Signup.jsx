@@ -186,7 +186,7 @@ function Signup() {
                 {/* Conditionally render the document upload field */}
                 {values.userType === 'provider' && (
                   <>
-                    <label className="fieldset-label">Upload Document</label>
+                    <label className="fieldset-label">Upload Document verifaction document image</label>
                     <input
                       type="file"
                       className="input"
