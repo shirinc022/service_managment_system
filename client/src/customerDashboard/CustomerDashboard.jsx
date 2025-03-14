@@ -1,26 +1,21 @@
-import React from "react";
-import { useState } from "react";
-import {
-  FaShoppingCart,
-  FaCreditCard,
-  FaUser,
-  FaSignOutAlt,
-} from "react-icons/fa";
-import Order from "./Order";
+import React, { useState } from "react";
+import { FaShoppingCart, FaCreditCard, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { customerLogout } from "../services/userservices";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../redux/Slices/userSlice";
+import CustomerOrdersTable from "./CustomerOrdersTable";
+import { persistor } from "../redux/store";
 
 function CustomerDashboard() {
   const [activeMenu, setActiveMenu] = useState("orders");
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const renderContent = () => {
     switch (activeMenu) {
       case "orders":
-        return <Orders />;
+        return <CustomerOrdersTable />;
       case "payments":
         return <Payments />;
       case "profile":
@@ -33,9 +28,9 @@ function CustomerDashboard() {
   const handleLogout = () => {
     try {
       customerLogout().then((res) => {
-        // persistor.purge()
+        persistor.purge();
         dispatch(clearUser());
-        navigate('/');
+        navigate("/");
       });
     } catch (error) {
       console.log("error");
@@ -43,44 +38,24 @@ function CustomerDashboard() {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-900  text-white p-4">
-        <h2 className="text-xl font-bold mb-6 text-center">
-          Customer Dashboard
-        </h2>
+      <div className="w-64 bg-gray-900 text-white p-4">
+        <h2 className="text-xl font-bold mb-6 text-center">Customer Dashboard</h2>
         <ul className="space-y-4">
-          <MenuItem
-            className="cursor-pointer"
-            label="Orders"
-            icon={<FaShoppingCart />}
-            isActive={activeMenu === "orders"}
-            onClick={() => setActiveMenu("orders")}
-          />
-          <MenuItem
-            label="Payments"
-            icon={<FaCreditCard />}
-            isActive={activeMenu === "payments"}
-            onClick={() => setActiveMenu("payments")}
-          />
-          <MenuItem
-            label="Profile"
-            icon={<FaUser />}
-            isActive={activeMenu === "profile"}
-            onClick={() => setActiveMenu("profile")}
-          />
-          <MenuItem
-            label="Logout"
-            icon={<FaSignOutAlt />}
-            isActive={false}
-            onClick={handleLogout}
-            isLogout
-          />
+          <MenuItem label="Orders" icon={<FaShoppingCart />} isActive={activeMenu === "orders"} onClick={() => setActiveMenu("orders")} />
+          <MenuItem label="Payments" icon={<FaCreditCard />} isActive={activeMenu === "payments"} onClick={() => setActiveMenu("payments")} />
+          <MenuItem label="Profile" icon={<FaUser />} isActive={activeMenu === "profile"} onClick={() => setActiveMenu("profile")} />
+          <MenuItem label="Logout" icon={<FaSignOutAlt />} isActive={false} onClick={handleLogout} isLogout />
         </ul>
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 p-6 bg-gray-100">{renderContent()}</div>
+      <div className="flex-grow p-6">
+        
+          {renderContent()}
+        
+      </div>
     </div>
   );
 }
@@ -98,16 +73,6 @@ function MenuItem({ label, icon, isActive, onClick, isLogout }) {
         {icon} {label}
       </button>
     </li>
-  );
-}
-
-// Orders Component
-function Orders() {
-  return (
-    <div className="p-6 bg-white text-gray-900 shadow-md rounded">
-      <h1 className="text-2xl font-bold">My Orders</h1>
-      <p className="mt-4">View your past and current orders.</p>
-    </div>
   );
 }
 

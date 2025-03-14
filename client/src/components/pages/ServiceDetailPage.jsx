@@ -2,40 +2,74 @@ import React, { useEffect, useState } from "react";
 import { FaStar, FaRegStar, FaUserCircle } from "react-icons/fa";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { listSingleService } from "../../services/userservices";
-import { useParams } from "react-router-dom";
+import { customerOrderRequest, listSingleService } from "../../services/userservices";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function ServiceDetailPage() {
   const { serviceId } = useParams();
   const [service, setService] = useState(null);
-  const [loading, setLoading] = useState(true);
+
+
+  
 
   useEffect(() => {
     listSingleService(serviceId)
       .then((res) => {
         setService(res.data.service);
-        setLoading(false);
+        
       })
       .catch((err) => {
         console.error("Error fetching service:", err);
-        setLoading(false);
+     
       });
   }, [serviceId]);
 
-  const images = [
-    "https://source.unsplash.com/800x500/?service",
-    "https://source.unsplash.com/800x500/?business",
-    "https://source.unsplash.com/800x500/?technology",
-  ];
+// const handleRequest=(serviceId)=>{
+//   customerOrderRequest(serviceId).then((res)=>{
+//     console.log(res);
+//     setLoading(false);
+//   }) .catch((err) => {
+//     console.error("Error fetching service:", err);
+//     setLoading(false);
+//   });
+// }
+
+const [formData, setFormData] = useState({
+  customer_name: "",
+  customer_phone: "",
+  customer_address: "",
+  customer_location: "",
+});
+
+const navigate = useNavigate(); // For redirecting to server route
+
+const handleChange = (e) => {
+  setFormData({ ...formData, [e.target.name]: e.target.value });
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  console.log("Form Submitted:", formData);
+
+  customerOrderRequest(serviceId,formData).then((res)=>{
+        console.log(res.data.message);
+        toast.success(res.data.message)
+        navigate('/customer-dashboard')
+       
+      }) .catch((err) => {
+        console.error("Error fetching service:", err);
+        
+      });
+
+};
 
   const customerReviews = [
     { name: "John Doe", rating: 5, feedback: "Amazing service!", profile: "" },
     { name: "Sarah Smith", rating: 4, feedback: "Very good experience.", profile: "" },
   ];
 
-  if (loading) {
-    return <div className="text-center py-10 text-lg font-semibold">Loading service details...</div>;
-  }
+  
 
   if (!service) {
     return <div className="text-center py-10 text-red-500 text-lg font-semibold">Service not found.</div>;
@@ -88,7 +122,7 @@ function ServiceDetailPage() {
         <p className="text-2xl font-semibold mt-5 text-primary">${service?.price}</p>
 
         {/* Book Now Button */}
-        <button className="btn btn-primary w-full mt-6 text-lg py-3 rounded-lg shadow-lg">Book Now</button>
+        <button className="btn btn-primary w-full mt-6 text-lg py-3 rounded-lg shadow-lg" onClick={() => document.getElementById("bookingModal").showModal()}>Book Now</button>
       </div>
 
       {/* Customer Feedback */}
@@ -113,6 +147,71 @@ function ServiceDetailPage() {
           <p className="text-gray-500">No reviews yet.</p>
         )}
       </div>
+
+
+      <dialog id="bookingModal" className="modal">
+        <div className="modal-box w-96 p-6 bg-base-100">
+          <h2 className="text-xl font-bold mb-4 text-center text-primary">Book a Service</h2>
+          
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <label className="block">
+              <span className="text-base font-semibold">Name</span>
+              <input 
+                type="text" 
+                name="customer_name"
+                required
+                className="input input-bordered w-full mt-1" 
+                value={formData.customer_name} 
+                onChange={handleChange} 
+              />
+            </label>
+
+            <label className="block">
+              <span className="text-base font-semibold">Phone</span>
+              <input 
+                type="text" 
+                name="customer_phone"
+                required
+                className="input input-bordered w-full mt-1" 
+                value={formData.customer_phone} 
+                onChange={handleChange} 
+              />
+            </label>
+
+            <label className="block">
+              <span className="text-base font-semibold">Address</span>
+              <textarea 
+                name="customer_address"
+                required
+                className="textarea textarea-bordered w-full mt-1" 
+                value={formData.customer_address} 
+                onChange={handleChange} 
+              ></textarea>
+            </label>
+
+
+            <label className="block">
+              <span className="text-base font-semibold">Location</span>
+              <input 
+                type="text" 
+                name="customer_location"
+                required
+                className="input input-bordered w-full mt-1" 
+                value={formData.customer_location} 
+                onChange={handleChange} 
+              />
+            </label>
+
+           
+            <div className="flex justify-end gap-2 mt-4">
+              <button type="button" className="btn btn-error" onClick={() => document.getElementById("bookingModal").close()}>
+                Cancel
+              </button>
+              <button type="submit" className="btn btn-success" >Submit</button>
+            </div>
+          </form>
+        </div>
+      </dialog>
     </div>
   );
 }

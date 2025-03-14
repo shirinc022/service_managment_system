@@ -11,7 +11,6 @@ providerRoutes.post('/service',authProvider,upload.array("images"),serviceAdd)
 providerRoutes.put('/service/:serviceId',authProvider,upload.array("images"),serviceUpdate)
 providerRoutes.get('/service/:id',authProvider,serviceView)
 providerRoutes.get('/allservices',authProvider,allProviderServiceView)
-
 providerRoutes.delete('/service/:id',authProvider,serviceDelete)
 
 

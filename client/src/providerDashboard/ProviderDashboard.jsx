@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { clearUser } from '../redux/Slices/userSlice';
 import { providerLogout } from '../services/userservices';
 import ProviderServiceListing from './ProviderServiceListing';
+import ProviderOrders from './ProviderOrders';
+import { persistor } from "../redux/store";
 
 function ProviderDashboard() {
         const [activeMenu, setActiveMenu] = useState("orders");
@@ -14,12 +16,16 @@ function ProviderDashboard() {
     
         const renderContent = () => {
           switch (activeMenu) {
+            case "services":
+              return <ProviderServiceListing/>;
             case "orders":
-              return <Orders />;
+              return <ProviderOrders/>  
             case "payments":
               return <Payments />;
             case "profile":
               return <Profile />;
+              case "reviews":
+              return <Reviews />;
             default:
               return <h1 className="text-xl">Select a section</h1>;
           }
@@ -29,7 +35,7 @@ function ProviderDashboard() {
                   const handleLogout = () => {
                     try {
                       providerLogout().then((res) => {
-                        // persistor.purge()
+                        persistor.purge()
                         dispatch(clearUser());
                         navigate('/');
                       });
@@ -44,7 +50,11 @@ function ProviderDashboard() {
   <div className="w-64 bg-gray-900 text-white p-4">
     <h2 className="text-xl font-bold mb-6 text-center">Provider Dashboard</h2>
     <ul className="space-y-4">
-      <MenuItem label="Services" icon={<FaTools />} isActive={activeMenu === "orders"} onClick={() => setActiveMenu("orders")} />
+    <MenuItem label="Orders" icon={<FaShoppingCart />} isActive={activeMenu === "orders"} onClick={() => setActiveMenu("orders")} />
+      <MenuItem label="Services" icon={<FaTools />} isActive={activeMenu === "services"} onClick={() => setActiveMenu("services")} />
+    
+      <MenuItem label="Reviews" icon={<FaCreditCard />} isActive={activeMenu === "reviews"} onClick={() => setActiveMenu("reviews")} />
+
       <MenuItem label="Payments" icon={<FaCreditCard />} isActive={activeMenu === "payments"} onClick={() => setActiveMenu("payments")} />
       <MenuItem label="Profile" icon={<FaUser />} isActive={activeMenu === "profile"} onClick={() => setActiveMenu("profile")} />
       <MenuItem label="Logout" icon={<FaSignOutAlt />} isActive={false} onClick={handleLogout} isLogout />
@@ -75,15 +85,16 @@ function ProviderDashboard() {
    </li>
  );
  }
- 
- // Orders Component
- function Orders() {
- return (
-   <ProviderServiceListing/>
- );
- }
- 
- // Payments Component
+
+
+ function Reviews() {
+  return (
+    <div className="p-6 bg-white text-gray-900 shadow-md rounded">
+      <h1 className="text-2xl font-bold">Reviews</h1>
+      <p className="mt-4">Manage your payment methods and transactions.</p>
+    </div>
+  );
+  }
  function Payments() {
  return (
    <div className="p-6 bg-white text-gray-900 shadow-md rounded">

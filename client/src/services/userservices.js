@@ -96,3 +96,38 @@ export const providerUpdateService = (serviceId,data) =>{
 export const providerGetOneService = (serviceId) =>{
     return axiosInstance.get(`/provider/service/${serviceId}`)
 }
+
+
+export const providerAllOrders = () =>{
+    return axiosInstance.get('/order/orderview')
+}
+
+export const providerAcceptOrder = (orderId) =>{
+    return axiosInstance.post(`/order/acceptorder/${orderId}`)
+}
+
+export const providerRejectOrder = (orderId) =>{
+    return axiosInstance.post(`/order/rejectorder/${orderId}`)
+}
+
+
+export const providerCompletedOrder = (orderId) =>{
+    return axiosInstance.post(`/order/allrequests/${orderId}`)
+}
+
+
+// Customer order
+
+export const customerAllOrder = () =>{
+    return axiosInstance.get('/order/allrequests')
+}
+
+
+export const customerDeleteOrder = (orderId) =>{
+    return axiosInstance.delete(`/order/deleterequest/${orderId}`)
+}
+
+//customer book now request
+export const customerOrderRequest = (serviceId,data) =>{
+    return axiosInstance.post(`/order/request/${serviceId}`,data)
+}

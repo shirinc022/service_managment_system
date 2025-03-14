@@ -169,8 +169,7 @@ const getOrders = async (req,res)=>{
             return res.status(401).json({ error: "Unauthorized: Please log in to view your requests" });
           }
           const orders = await orderModel.find({customer_id:customerId}) 
-          .populate("service_id Provider_id", "title price")
-          .select("status payment createdAt");
+          .populate("service_id Provider_id");
           if (!orders.length) {
             return res.status(404).json({ message: "No service requests found" });
           }
@@ -197,7 +196,7 @@ const getOrders = async (req,res)=>{
           if (!order) {
             return res.status(404).json({ error: "Order not found" });
           }
-          if (order.status !== "pending") {
+          if (order.status !== "Pending") {
             return res.status(400).json({ error: "Only pending orders can be deleted" });
           }
           await orderModel.deleteOne({ _id: orderId });
