@@ -2,8 +2,8 @@ const jwt=require('jsonwebtoken')
 
 const authAdmin = async (req,res,next)=>{
     try{
-        const {Admin_token}=req.cookies;
-        console.log(req.cookies)
+        const {Admin_token}=req.cookies.Admin_token;
+        console.log(req.cookies.Admin_token)
         if(!Admin_token){
             return  res.status(401).json({error:"jwt token not found"})
         }
