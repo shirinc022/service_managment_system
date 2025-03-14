@@ -67,7 +67,11 @@ const providerLogin = async (req, res) => {
     const verified=providerExist.verification_status
     
     const token = createProviderToken(providerExist._id, "provider",verified);
-    res.cookie("provider_token", token);
+    res.cookie("provider_token", token,{
+      httpOnly: true,       // Prevents client-side access to the cookie
+      secure: true, // Cookie is sent over HTTPS only in production
+      sameSite: 'None',     // Allows cookies to be sent across domains
+    });
   
     res
       .status(200)

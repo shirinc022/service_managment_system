@@ -54,7 +54,7 @@ const adminLogin = async (req, res) => {
     const token = createToken(adminExist._id, "admin");
     res.cookie('Admin_token', token, {
       httpOnly: true,       // Prevents client-side access to the cookie
-      secure: process.env.NODE_ENV === 'production', // Cookie is sent over HTTPS only in production
+      secure: true, // Cookie is sent over HTTPS only in production
       sameSite: 'None',     // Allows cookies to be sent across domains
     });
     // res.cookie("Admin_token", token);

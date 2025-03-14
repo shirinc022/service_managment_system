@@ -53,7 +53,11 @@ const customerLogin=async(req,res)=>{
          return res.status(400).json({error:"Invalid password"})
         }
         const token = createToken(customerExist._id,"customer")
-        res.cookie("customer_token",token)
+        res.cookie("customer_token",token,{
+          httpOnly: true,       // Prevents client-side access to the cookie
+          secure: true, // Cookie is sent over HTTPS only in production
+          sameSite: 'None',     // Allows cookies to be sent across domains
+        })
         console.log(token)
         res.status(200).json({message:"Customer login successful",user:customerExist})
      }catch(error){
