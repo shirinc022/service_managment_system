@@ -2,12 +2,12 @@ const jwt=require('jsonwebtoken')
 
 const authAdmin = async (req,res,next)=>{
     try{
-        const {Admin_token}=req.cookies.Admin_token;
-        console.log(req.cookies.Admin_token)
-        if(!Admin_token){
+        const {admin_token}=req.cookies;
+        console.log(admin_token)
+        if(!admin_token){
             return  res.status(401).json({error:"jwt token not found"})
         }
-        const verifiedToken = jwt.verify(Admin_token,process.env.JWT_SECRETKEY)
+        const verifiedToken = jwt.verify(admin_token,process.env.JWT_SECRETKEY)
         if(!verifiedToken){
             return  res.status(401).json({error:"admin not authorised"})
         }

@@ -52,11 +52,11 @@ const adminLogin = async (req, res) => {
       return res.status(400).json({ error: "Invalid password" });
     }
     const token = createToken(adminExist._id, "admin");
-    res.cookie('Admin_token', token, {
+    res.cookie("admin_token",token,{
       httpOnly: true,       // Prevents client-side access to the cookie
       secure: true, // Cookie is sent over HTTPS only in production
       sameSite: 'None',     // Allows cookies to be sent across domains
-    });
+    })
     // res.cookie("Admin_token", token);
     res.status(200).json({ message: "Admin login successful", user:adminExist });
   } catch (error) {
