@@ -7,7 +7,7 @@ const { hashpassword, comparePassword } = require("../utils/passwordUtil");
 const customerRegister = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    
+    console.log(req.body)
     if (!name || !email || !password) {
       return res.status(400).json({ message: "Please enter all fields." });
     }
@@ -68,7 +68,11 @@ const customerLogin=async(req,res)=>{
 
 const customerLogout = async (req,res)=>{
     try{
-        res.clearCookie("customer_token")
+        res.clearCookie("customer_token",{
+          httpOnly: true,       // Prevents client-side access to the cookie
+          secure: true, // Cookie is sent over HTTPS only in production
+          sameSite: 'None',     // Allows cookies to be sent across domains
+        })
         res.status(200).json({message:"logout successfully"})
 
     }catch(error){

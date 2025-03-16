@@ -39,6 +39,7 @@ const adminRegister = async (req, res) => {
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
+    
     if (!email || !password) {
       return res.status(400).json({ error: "Please fill all the fields." });
     }
@@ -69,7 +70,11 @@ const adminLogin = async (req, res) => {
 
 const adminLogout = async (req, res) => {
   try {
-    res.clearCookie("Admin_token");
+    res.clearCookie("admin_token",{
+      httpOnly: true,       // Prevents client-side access to the cookie
+      secure: true, // Cookie is sent over HTTPS only in production
+      sameSite: 'None',     // Allows cookies to be sent across domains
+    });
     res.status(200).json({ message: "logout successfully" });
   } catch (error) {
     console.log(error);

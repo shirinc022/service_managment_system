@@ -86,7 +86,11 @@ const providerLogin = async (req, res) => {
 
 const providerLogout = async (req, res) => {
   try {
-    res.clearCookie("provider_token");
+    res.clearCookie("provider_token",{
+      httpOnly: true,       // Prevents client-side access to the cookie
+      secure: true, // Cookie is sent over HTTPS only in production
+      sameSite: 'None',     // Allows cookies to be sent across domains
+    });
     res.status(200).json({ message: "logout successfully" });
   } catch (error) {
     console.log(error);

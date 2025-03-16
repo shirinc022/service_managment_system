@@ -1,106 +1,112 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import {
   adminSignup,
   customerSignup,
   providerSignup,
 } from "../../services/userservices";
-import { toast } from 'react-toastify'; // Assuming you have react-toastify for notifications
+import { toast } from "react-toastify"; // For notifications
+import { saveUser } from "../../redux/Slices/userSlice";
 
 function Signup() {
-  const [values, setValues] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    userType: '',
-    document: null // Add a field for document
-  });
-  const [errors, setErrors] = useState({});
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [values, setValues] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    userType: "customer", // Default to customer
+    document: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  // 🔹 Validate Form Fields
   const validateForm = () => {
     const newErrors = {};
-    if (!values.name) {
-      newErrors.name = "Name is required";
-    }
-    if (!values.email) {
-      newErrors.email = "Email is required";
-    }
-    if (!values.phone) {
-      newErrors.phone = "Phone is required";
-    }
-    if (!values.password) {
-      newErrors.password = "Password is required";
-    }
-    if (!values.userType) {
-      newErrors.userType = "User type is required";
-    }
-    if (values.userType === 'provider' && !values.document) {
+    if (!values.name) newErrors.name = "Name is required";
+    if (!values.email) newErrors.email = "Email is required";
+    if (!values.phone) newErrors.phone = "Phone is required";
+    if (!values.password) newErrors.password = "Password is required";
+    if (!values.userType) newErrors.userType = "User type is required";
+    if (values.userType === "provider" && !values.document) {
       newErrors.document = "Document is required for providers";
     }
     return newErrors;
   };
 
-  const onSubmit = (e) => {
+  // 🔹 Handle Form Submission
+  const onSubmit = async (e) => {
     e.preventDefault();
     const formErrors = validateForm();
-    if (Object.keys(formErrors).length === 0) {
-      let signupFunction;
-      switch (values.userType) {
-        case "admin":
-          signupFunction = adminSignup;
-          break;
-        case "provider":
-          signupFunction = providerSignup;
-          break;
-        case "customer":
-          signupFunction = customerSignup;
-          break;
-        default:
-          toast.error("Invalid user type");
-          return;
-      }
-      
-      const formData = new FormData();
-      formData.append('name', values.name);
-      formData.append('email', values.email);
-      formData.append('phone', values.phone);
-      formData.append('password', values.password);
-      formData.append('userType', values.userType);
-      if (values.document) {
-        formData.append('document', values.document);
-      }
-
-      signupFunction(formData)
-        .then((res) => {
-          console.log(res);
-          toast.success("SignUp Successful");
-          switch (values.userType) {
-            case "admin":
-              navigate("/admin-dashboard");
-              break;
-            case "provider":
-              navigate("/provider-dashboard");
-              break;
-            case "customer":
-              navigate("/customer-dashboard");
-              break;
-            default:
-              navigate("/");
-              break;
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          toast.error(err.response.data.error, {
-            position: "top-center",
-          });
-        });
-    } else {
+    if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
+      return;
     }
+  
+    let signupFunction;
+    switch (values.userType) {
+      case "admin":
+        signupFunction = adminSignup;
+        break;
+      case "provider":
+        signupFunction = providerSignup;
+        break;
+      case "customer":
+        signupFunction = customerSignup;
+        break;
+      default:
+        toast.error("Invalid user type");
+        return;
+    }
+  
+    let requestData;
+    let config = {}; // Needed for headers in provider signup
+  
+    if (values.userType === "provider") {
+      // ✅ Use FormData for providers
+      requestData = new FormData();
+      requestData.append("name", values.name);
+      requestData.append("email", values.email);
+      requestData.append("phone", values.phone);
+      requestData.append("password", values.password);
+      requestData.append("userType", values.userType);
+      requestData.append("document", values.document);
+  
+      // Ensure headers are set for file uploads
+      config = {
+        headers: { "Content-Type": "multipart/form-data" },
+      };
+    } else {
+      // ✅ Send normal JSON for customers & admins
+      requestData = {
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        password: values.password,
+        userType: values.userType,
+      };
+    }
+  
+    signupFunction(requestData, config) // Send requestData with config
+      .then((res) => {
+        console.log(res.data.message);
+        toast.success(res.data.message);
+        dispatch(saveUser(res.data.user));
+        navigate("/login") 
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(err.response?.data?.error || "Signup failed", {
+          position: "top-center",
+        });
+      });
   };
+  
+  
 
   return (
     <div className="hero">
@@ -113,11 +119,11 @@ function Signup() {
                 <select
                   className="input"
                   name="userType"
+                  value={values.userType}
                   onChange={(e) =>
                     setValues({ ...values, [e.target.name]: e.target.value })
                   }
                 >
-                  <option value="">Select User Type</option>
                   <option value="customer">Customer</option>
                   <option value="admin">Admin</option>
                   <option value="provider">Provider</option>
@@ -130,9 +136,10 @@ function Signup() {
                   className="input"
                   placeholder="Name"
                   name="name"
-                  onChange={(e) => {
-                    setValues({ ...values, [e.target.name]: e.target.value });
-                  }}
+                  value={values.name}
+                  onChange={(e) =>
+                    setValues({ ...values, [e.target.name]: e.target.value })
+                  }
                 />
                 {errors.name && <p className="error">{errors.name}</p>}
 
@@ -142,9 +149,10 @@ function Signup() {
                   className="input"
                   placeholder="Email"
                   name="email"
-                  onChange={(e) => {
-                    setValues({ ...values, [e.target.name]: e.target.value });
-                  }}
+                  value={values.email}
+                  onChange={(e) =>
+                    setValues({ ...values, [e.target.name]: e.target.value })
+                  }
                 />
                 {errors.email && <p className="error">{errors.email}</p>}
 
@@ -154,9 +162,10 @@ function Signup() {
                   className="input"
                   placeholder="Phone number"
                   name="phone"
-                  onChange={(e) => {
-                    setValues({ ...values, [e.target.name]: e.target.value });
-                  }}
+                  value={values.phone}
+                  onChange={(e) =>
+                    setValues({ ...values, [e.target.name]: e.target.value })
+                  }
                 />
                 {errors.phone && <p className="error">{errors.phone}</p>}
 
@@ -166,34 +175,27 @@ function Signup() {
                   className="input"
                   placeholder="Password"
                   name="password"
-                  onChange={(e) => {
-                    setValues({ ...values, [e.target.name]: e.target.value });
-                  }}
+                  value={values.password}
+                  onChange={(e) =>
+                    setValues({ ...values, [e.target.name]: e.target.value })
+                  }
                 />
                 {errors.password && <p className="error">{errors.password}</p>}
 
-                {/* <label className="fieldset-label">Confirm Password</label>
-                <input
-                  type="password"
-                  className="input"
-                  placeholder="Confirm Password"
-                  name="confirmpassword"
-                  onChange={(e) => {
-                    setValues({ ...values, [e.target.name]: e.target.value });
-                  }}
-                /> */}
-
-                {/* Conditionally render the document upload field */}
-                {values.userType === 'provider' && (
+                {/* Document Upload (For Providers Only) */}
+                {values.userType === "provider" && (
                   <>
-                    <label className="fieldset-label">Upload Document verifaction document image</label>
+                    <label className="fieldset-label">
+                      Upload Verification Document
+                    </label>
                     <input
                       type="file"
                       className="input"
+                      accept=".jpg,.jpeg,.png"
                       name="document"
-                      onChange={(e) => {
-                        setValues({ ...values, document: e.target.files[0] });
-                      }}
+                      onChange={(e) =>
+                        setValues({ ...values, document: e.target.files[0] })
+                      }
                     />
                     {errors.document && <p className="error">{errors.document}</p>}
                   </>
