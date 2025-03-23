@@ -64,6 +64,7 @@ function ProviderDashboard() {
   {/* Content Area */}
   <div className="flex-1 flex flex-col overflow-auto bg-gray-100 p-6">
     {renderContent()}
+    
   </div>
 </div>
 

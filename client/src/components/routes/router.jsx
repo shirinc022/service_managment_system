@@ -11,6 +11,8 @@ import AdminDashboard from '../../adminDashboard/AdminDashboard';
 import ServiceDetailPage from '../pages/ServiceDetailPage';
 import AddService from '../../providerDashboard/AddService';
 import UpdateService from '../../providerDashboard/UpdateService';
+import BillConfirmationPage from '../../customerDashboard/BillConfirmationPage';
+import PaymentSuccess from '../../customerDashboard/PaymentSuccess';
 
 export const router  = createBrowserRouter([
         {
@@ -57,6 +59,14 @@ export const router  = createBrowserRouter([
             {
               path: "update-service/:serviceId",
               element: <UpdateService/>,
+            },
+            {
+              path: "bill/:orderId",
+              element: <BillConfirmationPage/>,
+            },
+            {
+              path: "payment/success",
+              element: <PaymentSuccess/>,
             },
            
           ],

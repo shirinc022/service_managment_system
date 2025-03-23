@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import { FaPhone, FaTrash, FaMapMarkerAlt, FaUser } from "react-icons/fa";
 import { customerAllOrder, customerDeleteOrder } from "../services/userservices";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function CustomerOrdersTable() {
   const [orders, setOrders] = useState([]);
+  // console.log(orders.billStatus)
+  const navigate = useNavigate()
 
   useEffect(() => {
     customerAllOrder()
@@ -73,7 +76,11 @@ export default function CustomerOrdersTable() {
                       <button className="btn btn-primary btn-sm flex items-center gap-1">
                         <FaPhone /> Contact
                       </button>
-                    ) : (
+                    ) :order.status === "Completed" && order.billStatus === "Bill sent" ?(
+                      <button className="btn btn-primary btn-sm flex items-center gap-1" onClick={()=>navigate(`/bill/${order._id}` )}>
+                         Pay Bill Now
+                      </button>
+                    ): (
                       <span className="text-gray-500">No Action</span>
                     )}
                   </td>

@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { providerAcceptOrder, providerAllOrders, providerCompletedOrder, providerRejectOrder } from "../services/userservices";
+import {
+  providerAcceptOrder,
+  providerAllOrders,
+  providerBillGeneration,
+  providerBillsent,
+  providerCompletedOrder,
+  providerRejectOrder,
+} from "../services/userservices";
 import { toast } from "react-toastify";
 
 export default function ProviderOrdersTable() {
@@ -18,48 +25,128 @@ export default function ProviderOrdersTable() {
   }, []);
 
   const handleAccept = (orderId) => {
-    providerAcceptOrder(orderId).then((res)=>{
+    providerAcceptOrder(orderId)
+      .then((res) => {
         console.log(res.data.message);
-        toast.success(res.data.message)
-      
-         setOrders(orders.map((order) =>
-      order._id === orderId ? { ...order, status: "Accepted" } : order
-    ));
-           
-    }).catch ((error)=> {
-        console.log("error");
+        toast.success(res.data.message);
+
+        setOrders(
+          orders.map((order) =>
+            order._id === orderId ? { ...order, status: "Accepted" } : order
+          )
+        );
       })
-   
+      .catch((error) => {
+        console.log("error");
+      });
   };
 
   const handleReject = (orderId) => {
-    providerRejectOrder(orderId).then((res)=>{
+    providerRejectOrder(orderId)
+      .then((res) => {
         console.log(res.data.message);
-        toast.error(res.data.message)
-        setOrders(orders.map((order) =>
+        toast.error(res.data.message);
+        setOrders(
+          orders.map((order) =>
             order._id === orderId ? { ...order, status: "Rejected" } : order
-          ));
-
-    }).catch ((error)=> {
-        console.log("error");
+          )
+        );
       })
-   
+      .catch((error) => {
+        console.log("error");
+      });
   };
 
   const handleComplete = (orderId) => {
-    providerCompletedOrder(orderId).then((res)=>{
+    console.log(orderId);
+    providerCompletedOrder(orderId)
+      .then((res) => {
         console.log(res.data.message);
-        toast.success(res.data.message)
-        setOrders(orders.map((order) =>
+        toast.success(res.data.message);
+        setOrders(
+          orders.map((order) =>
             order._id === orderId ? { ...order, status: "Completed" } : order
-          ));
-
-    }).catch ((error)=> {
-        console.log("error");
+          )
+        );
       })
-    // setOrders(orders.map((order) =>
-    //   order.id === orderId ? { ...order, status: "Completed" } : order
-    // ));
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [bill, setBill] = useState({
+    basicAmount: "",
+    materialCost: "",
+    extraCharges: "",
+    description: "",
+    totalPrice: 0,
+  });
+
+  // Open Modal
+  const openBillModal = (order) => {
+    setSelectedOrder(order);
+
+    setBill({
+      basicAmount: order.price,
+      materialCost: "",
+      extraCharges: "",
+      description: "",
+      totalPrice: 0,
+    });
+    setIsModalOpen(true);
+  };
+
+  // Close Modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // Handle Input Changes & Calculate Total
+  const handleBillChange = (e) => {
+    const { name, value } = e.target;
+    const updatedBill = { ...bill, [name]: value };
+
+    // Calculate Total Price
+    const total =
+      Number(updatedBill.basicAmount) +
+      Number(updatedBill.materialCost) +
+      Number(updatedBill.extraCharges);
+
+    updatedBill.totalPrice = total;
+    setBill(updatedBill);
+  };
+
+  // Submit Bill
+  const handleSubmitBill = () => {
+    console.log(selectedOrder._id);
+
+    providerBillGeneration(selectedOrder._id, bill)
+      .then((res) => {
+        console.log(res.data.meassage);
+
+        toast.success("Bill send successfully");
+        closeModal();
+        providerBillsent(selectedOrder._id)
+          .then((res) => {
+            console.log(res)
+            setOrders(
+              orders.map((order) =>
+                order._id === selectedOrder._id
+                  ? { ...order, status: "Bill Sent" }
+                  : order
+              )
+            );
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+       
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   };
 
   return (
@@ -74,22 +161,53 @@ export default function ProviderOrdersTable() {
               <th className="p-2 w-10 text-left">#</th>
               <th className="p-2 w-25 text-left">Service Name</th>
               <th className="p-2 w-25 text-left">Customer</th>
-              {/* <th className="p-4 w-35 text-left">Order Date</th> */}
               <th className="p-2 w-40 text-left">Address</th>
+              <th className="p-2 w-40 text-left">Payment</th>
+
               <th className="p-2 w-25 text-left">Status</th>
               <th className="p-2 w-25 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
             {orders.map((order, index) => (
-              <tr key={order._id} className="hover:bg-primary/10 border-b border-base-300">
+              <tr
+                key={order._id}
+                className="hover:bg-primary/10 border-b border-base-300"
+              >
                 <td className="p-2">{index + 1}</td>
-                <td className="p-2 font-semibold text-base-content">{order.service_id?.title}</td>
-                <td className="p-2 font-semibold text-base-content">{order.customer_id?.name}</td>
-                {/* <td className="p-4 text-gray-500">{order.order_date}</td> */}
-                <td className="p-2 ">{order.customer_name} <br /> {order.customer_phone}  <br /> {order.customer_address}<br /> {order.customer_location}</td>
+                <td className="p-2 font-semibold text-base-content">
+                  {order.service_id?.title}
+                </td>
+                <td className="p-2 font-semibold text-base-content">
+                  {order.customer_id?.name}
+                </td>
                 <td className="p-2">
-                  <button className={`font-bold badge ${order.status === "Completed" ? "badge-success" : order.status === "Rejected" ? "badge-error" : "badge-warning"}`}>
+                  {order.customer_name} <br /> {order.customer_phone} <br />{" "}
+                  {order.customer_address}
+                  <br /> {order.customer_location}
+                </td>
+                <td className="p-2">
+                  <button
+                    className={`font-bold badge ${
+                      order.payment === "Paid"
+                        ? "badge-success"
+                        : "badge-warning"
+                    }`}
+                  >
+                    {order.payment}
+                  </button>
+                </td>
+
+                <td className="p-2">
+                  <button
+                    className={`font-bold badge ${
+                      order.status === "Completed"
+                        ? "badge-success"
+                        : order.status === "Rejected"
+                        ? "badge-error"
+                        : "badge-warning"
+                    }`}
+                  >
                     {order.status}
                   </button>
                 </td>
@@ -118,12 +236,73 @@ export default function ProviderOrdersTable() {
                       Mark as Completed
                     </button>
                   )}
+                  {order.status === "Completed" && (
+                    <button
+                      onClick={() => openBillModal(order)}
+                      className="btn btn-info btn-sm"
+                    >
+                      Send Bill
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Bill Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h3 className="text-lg font-bold mb-4">Send Bill</h3>
+            <div className="space-y-3">
+              <input
+                type="number"
+                name="basicAmount"
+                placeholder="Basic Amount"
+                className="input input-bordered w-full"
+                value={bill.basicAmount}
+                onChange={handleBillChange}
+              />
+              <input
+                type="number"
+                name="materialCost"
+                placeholder="Material Cost"
+                className="input input-bordered w-full"
+                value={bill.materialCost}
+                onChange={handleBillChange}
+              />
+              <input
+                type="number"
+                name="extraCharges"
+                placeholder="Other Extra Charges"
+                className="input input-bordered w-full"
+                value={bill.extraCharges}
+                onChange={handleBillChange}
+              />
+              <textarea
+                name="description"
+                placeholder="Description"
+                className="textarea textarea-bordered w-full"
+                value={bill.description}
+                onChange={handleBillChange}
+              ></textarea>
+              <div className="text-xl font-bold text-center">
+                Total: ${bill.totalPrice}
+              </div>
+            </div>
+            <div className="flex justify-between mt-4">
+              <button onClick={closeModal} className="btn btn-outline">
+                Cancel
+              </button>
+              <button onClick={handleSubmitBill} className="btn btn-primary">
+                Submit Bill
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -43,7 +43,7 @@ const placeOrder=async(req,res)=>{
       title:service.title,
       price: service.price, // Ensure price exists in Service model
       customer_name,customer_phone,customer_address,customer_location,
-      payment: "pending"
+    
   
     })
     await Order.save()
@@ -210,6 +210,30 @@ const getOrders = async (req,res)=>{
     }
   }
 
+  const updateBillStatus  =async (req,res)=>{
+    try {
+      const {orderId}=req.params
+      const updatedOrder = await orderModel.findByIdAndUpdate(
+        orderId,
+        { billStatus: "Bill sent" },
+        { new: true } 
+      );
+  
+      if (!updatedOrder) {
+        return res.status(404).json({error: "Order not found" });
+      }
+  
+      res.status(200).json({message: "Bill status updated", order: updatedOrder });
+      
+  
+    }catch (error) {
+      console.log(error);
+      res
+        .status(error.status || 500)
+        .json({ error: error.message || "internal server error" });
+    }
+  }
+
  
 
 
@@ -220,5 +244,6 @@ const getOrders = async (req,res)=>{
     rejectOrder,
     customerOrderView,
     deleteOrder,
-    completedOrder
+    completedOrder,
+    updateBillStatus
   };

@@ -112,7 +112,7 @@ export const providerRejectOrder = (orderId) =>{
 
 
 export const providerCompletedOrder = (orderId) =>{
-    return axiosInstance.post(`/order/allrequests/${orderId}`)
+    return axiosInstance.post(`/order/completedorder/${orderId}`)
 }
 
 
@@ -130,4 +130,26 @@ export const customerDeleteOrder = (orderId) =>{
 //customer book now request
 export const customerOrderRequest = (serviceId,data) =>{
     return axiosInstance.post(`/order/request/${serviceId}`,data)
+}
+
+
+//provider bill generation after completing service
+export const providerBillGeneration = (orderId,data) =>{
+    return axiosInstance.post(`/bill/newbill/${orderId}`,data)
+}
+
+// update bill stautus in order model to bill sent
+export const providerBillsent = (orderId) =>{
+    return axiosInstance.put(`order/billstatus/${orderId}`)
+}
+
+//get bill by OrderId
+export const getBill = (orderId) =>{
+    return axiosInstance.get(`/bill/getbill/${orderId}`)
+}
+
+
+// stripe payment
+export const makePaymentOnStripe = (body) =>{
+    return axiosInstance.post('/payment/checkout',body)
 }

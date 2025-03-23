@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaShoppingCart, FaCreditCard, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { customerLogout } from "../services/userservices";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../redux/Slices/userSlice";
 import CustomerOrdersTable from "./CustomerOrdersTable";
@@ -54,6 +54,7 @@ function CustomerDashboard() {
       <div className="flex-grow p-6">
         
           {renderContent()}
+          
         
       </div>
     </div>
