@@ -62,32 +62,32 @@ const paymentFunction = async (req,res)=>{
 
 
 
-const paymentWebhook = async (req, res) => {
-    const sig = req.headers['stripe-signature']; // Get the Stripe signature
+// const paymentWebhook = async (req, res) => {
+//     const sig = req.headers['stripe-signature']; // Get the Stripe signature
 
-    try {
-        const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+//     try {
+//         const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
 
-        // Check if event is a successful payment
-        if (event.type === 'checkout.session.completed') {
-            const session = event.data.object;
-            const orderId = session.metadata.orderId; // Get order ID from metadata
+//         // Check if event is a successful payment
+//         if (event.type === 'checkout.session.completed') {
+//             const session = event.data.object;
+//             const orderId = session.metadata.orderId; // Get order ID from metadata
 
-            // Update the Order model's paymentStatus to "Paid"
-            await orderModel.findByIdAndUpdate(orderId, { paymentStatus: "Paid" });
+//             // Update the Order model's paymentStatus to "Paid"
+//             await orderModel.findByIdAndUpdate(orderId, { paymentStatus: "Paid" });
 
-            // Update the Bill model's paymentStatus to "Paid"
-            await billModel.findOneAndUpdate({ order_id: orderId }, { payment: "Paid" });
+//             // Update the Bill model's paymentStatus to "Paid"
+//             await billModel.findOneAndUpdate({ order_id: orderId }, { payment: "Paid" });
 
-            console.log(`✅ Order ${orderId} marked as Paid!`);
-        }
+//             console.log(`✅ Order ${orderId} marked as Paid!`);
+//         }
 
-        res.status(200).send('Webhook received');
-    } catch (err) {
-        console.error('Error verifying webhook:', err);
-        res.status(400).send(`Webhook Error: ${err.message}`);
-    }
-};
+//         res.status(200).send('Webhook received');
+//     } catch (err) {
+//         console.error('Error verifying webhook:', err);
+//         res.status(400).send(`Webhook Error: ${err.message}`);
+//     }
+// };
 
 
 
