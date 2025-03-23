@@ -4,7 +4,7 @@ const express = require('express');
 const paymentRoutes = express.Router()
 
 paymentRoutes.post('/checkout',authCustomer,paymentFunction)
-// paymentRoutes.post('/webhook', express.raw({ type: 'application/json' }), paymentWebhook);
+paymentRoutes.post('/webhook', express.raw({ type: 'application/json' }), paymentWebhook);
 
 
 
