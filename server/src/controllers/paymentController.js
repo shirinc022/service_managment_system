@@ -26,8 +26,13 @@ const paymentFunction = async (req, res) => {
       mode: 'payment',
       success_url: `${process.env.FRONTEND_URL}/payment/success`,
       cancel_url: `${process.env.FRONTEND_URL}/payment/failed`,
-      metadata: { orderId, billId } // Passing metadata for webhook
+      metadata: {
+        orderId: String(orderId),
+        billId: String(billId)
+      } // Passing metadata for webhook
     });
+    console.log("✅ Stripe Session Created:", session);
+
 
     res.status(200).json({ success: true, sessionId: session.id });
   } catch (error) {
