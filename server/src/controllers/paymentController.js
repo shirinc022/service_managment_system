@@ -3,6 +3,9 @@ const orderModel = require('../models/orderModel');
 const billModel = require('../models/billModel');
 require('dotenv').config();
 
+if (!process.env.STRIPE_SECRET || !process.env.STRIPE_WEBHOOK_SECRET || !process.env.FRONTEND_URL) {
+  throw new Error("Missing required environment variables for Stripe integration.");
+}
 
 const stripe = new Stripe(process.env.STRIPE_SECRET);
 
@@ -29,11 +32,10 @@ const paymentFunction = async (req, res) => {
       metadata: {
         orderId: String(orderId),
         billId: String(billId)
-      } // Passing metadata for webhook
+      }
     });
+
     console.log("✅ Stripe Session Created:", session);
-
-
     res.status(200).json({ success: true, sessionId: session.id });
   } catch (error) {
     console.error("Payment Error:", error);
@@ -41,59 +43,54 @@ const paymentFunction = async (req, res) => {
   }
 };
 
+const handlePaymentSuccess = async (session) => {
+  const { orderId, billId } = session.metadata;
 
+  if (!orderId || !billId) {
+    throw new Error("Missing orderId or billId in metadata");
+  }
+
+  const updatedOrder = await orderModel.findByIdAndUpdate(orderId, { payment: "Paid" }, { new: true });
+  const updatedBill = await billModel.findByIdAndUpdate(billId, { paymentStatus: "Paid" }, { new: true });
+
+  if (!updatedOrder || !updatedBill) {
+    throw new Error("Order or Bill not found");
+  }
+
+  console.log(`✅ Order ${orderId} & Bill ${billId} marked as Paid!`);
+  console.log("🔹 Updated Order:", updatedOrder);
+  console.log("🔹 Updated Bill:", updatedBill);
+};
 
 const paymentWebhook = async (req, res) => {
   console.log("✅ Webhook received");
 
   let event;
   try {
-      if (process.env.NODE_ENV === 'development') {
-          console.log("⚠️ Skipping Stripe signature verification in development mode.");
+    if (process.env.NODE_ENV === 'development') {
+      console.log("⚠️ Skipping Stripe signature verification in development mode.");
+      const rawBody = req.body.toString();
+      event = JSON.parse(rawBody);
+    } else {
+      const sig = req.headers['stripe-signature'];
+      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    }
 
-          // ✅ Convert Buffer to JSON in development
-          const rawBody = req.body.toString();
-          event = JSON.parse(rawBody);
-      } else {
-          const sig = req.headers['stripe-signature'];
-          event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
-      }
+    console.log("🔹 Full Event:", JSON.stringify(event, null, 2));
 
-      console.log("🔹 Full Event:", JSON.stringify(event, null, 2)); // Check event structure
+    switch (event.type) {
+      case 'payment_intent.succeeded':
+        await handlePaymentSuccess(event.data.object);
+        break;
+      default:
+        console.log(`Unhandled event type: ${event.type}`);
+    }
 
-      if (event.type === 'payment_intent.succeeded') {
-          const session = event.data.object;
-          console.log("🎉 Payment Success Event!", session);
-
-          // ✅ Extract metadata correctly
-          let orderId = session.metadata?.orderId;
-          let billId = session.metadata?.billId;
-
-          console.log(`🔹 Extracted Order ID: ${orderId}, Bill ID: ${billId}`);
-
-          if (!orderId || !billId) {
-              console.error("❌ Missing orderId or billId in metadata");
-              return res.status(400).send("Missing orderId or billId");
-          }
-
-       
-
-          // ✅ Update Database
-          const updatedOrder = await orderModel.findByIdAndUpdate(orderId,{ payment: "Paid" }, { new: true } );
-          const updatedBill = await billModel.findByIdAndUpdate(billId, { paymentStatus: "Paid" }, { new: true });
-
-          console.log(`✅ Order ${orderId} & Bill ${billId} marked as Paid!`);
-          console.log("🔹 Updated Order:", updatedOrder);
-          console.log("🔹 Updated Bill:", updatedBill);
-      }
-
-      res.status(200).send('Webhook received');
+    res.status(200).send('Webhook received');
   } catch (err) {
-      console.error('❌ Webhook verification error:', err.message);
-      res.status(400).send(`Webhook Error: ${err.message}`);
+    console.error('❌ Webhook verification error:', err.message);
+    res.status(400).send(`Webhook Error: ${err.message}`);
   }
 };
 
-
-  
 module.exports = { paymentFunction, paymentWebhook };
