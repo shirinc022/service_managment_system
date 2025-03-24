@@ -2,7 +2,7 @@ const Stripe = require('stripe');
 const orderModel = require('../models/orderModel');
 const billModel = require('../models/billModel');
 require('dotenv').config();
-const mongoose = require("mongoose");
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET);
 
@@ -61,7 +61,7 @@ const paymentWebhook = async (req, res) => {
 
       console.log("🔹 Full Event:", JSON.stringify(event, null, 2)); // Check event structure
 
-      if (event.type === 'checkout.session.completed') {
+      if (event.type === 'payment_intent.succeeded') {
           const session = event.data.object;
           console.log("🎉 Payment Success Event!", session);
 
