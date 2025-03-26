@@ -14,7 +14,9 @@ const orderSchema=new mongoose.Schema({
         price: {type:Number,required:true},
         billStatus:{type:String, enum:['Bill not send', 'Bill sent'], default :'Bill not send'},
         status: { type: String, enum: ['Pending', 'Accepted', 'Rejected','Completed'], default: 'Pending' },
-        payment:{type:String, enum:['Paid', 'Pending'], default :'Pending'}
+        payment:{type:String, enum:['Paid', 'Pending'], default :'Pending'},
+        reviewStatus:{type:String, enum:['Reviewed', 'Pending'], default :'Pending'}
+
     },{timestamps:true});
 
 

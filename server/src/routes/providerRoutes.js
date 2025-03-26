@@ -1,4 +1,4 @@
-const { providerRegister, providerLogin, providerLogout, serviceAdd, serviceUpdate, serviceView, serviceDelete, getOrders, allProviderServiceView } = require('../controllers/providerController')
+const { providerRegister, providerLogin, providerLogout, serviceAdd, serviceUpdate, serviceView, serviceDelete, getOrders, allProviderServiceView, getProviderProfile, updateProviderPassword, updateProviderPhone } = require('../controllers/providerController')
 const { upload } = require('../middleware/multer')
 const authProvider = require('../middleware/providerAuth')
 
@@ -13,12 +13,16 @@ providerRoutes.get('/service/:id',authProvider,serviceView)
 providerRoutes.get('/allservices',authProvider,allProviderServiceView)
 providerRoutes.delete('/service/:id',authProvider,serviceDelete)
 
+//profile
+providerRoutes.get("/profile",authProvider,getProviderProfile)
+providerRoutes.put("/change-password",authProvider,updateProviderPassword)
+providerRoutes.put("/update-phone",authProvider,updateProviderPhone)
 
 
-//order
-// providerRoutes.get('/orders',orderView)
-// providerRoutes.put('/acceptOrder/:id', authProvider,acceptRequest);
-// providerRoutes.put('/declineOrder/:id', authProvider, declineRequest);
+
+
+
+
 
 
 

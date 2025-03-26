@@ -4,7 +4,7 @@ const authProvider = async (req,res,next)=>{
    
     try{
         const {provider_token}=req.cookies;
-        console.log(provider_token)
+       
       
         if(!provider_token){
             return  res.status(401).json({error:"jwt token not found"})

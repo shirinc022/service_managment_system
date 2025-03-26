@@ -178,5 +178,46 @@ const getOrdersView = async(req,res)=>{
 }
 
 
+const getAdminProfile = async (req, res) => {
+  try {
+    
+    const admin = await adminDb.findById(req.admin).select("-password");
+    res.status(200).json({ admin });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
-module.exports = { adminRegister, adminLogin, adminLogout , adminVerifyProvider,getCustomers,getProviders,getOrdersView, adminRejectProvider};
+const updateAdminProfile = async (req, res) => {
+  try {
+    const { name } = req.body;
+    const updatedAdmin = await adminDb.findByIdAndUpdate(req.admin, { name }, { new: true});
+    
+    res.status(200).json({ message: "Profile updated successfully." ,updatedAdmin});
+  } catch (error) {
+    res.status(500).json({ message: "Error updating profile" });
+  }
+};
+
+const changeAdminPassword = async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+    const hashedPassword = await hashpassword(newPassword);
+    await adminDb.findByIdAndUpdate(req.admin, { password: hashedPassword });
+    res.status(200).json({ message: "Password changed successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "Error changing password" });
+  }
+};
+
+const getAdminReviews = async (req, res) => {
+  try {
+    const reviews = await reviewModel.find().populate("customer_id", "name").populate("service_id", "title");
+    res.status(200).json({ reviews });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching reviews" });
+  }
+};
+
+
+module.exports = { adminRegister, adminLogin, adminLogout , adminVerifyProvider,getCustomers,getProviders,getOrdersView, adminRejectProvider,getAdminProfile, updateAdminProfile, changeAdminPassword, getAdminReviews};

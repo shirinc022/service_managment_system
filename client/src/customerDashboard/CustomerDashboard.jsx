@@ -1,25 +1,37 @@
 import React, { useState } from "react";
-import { FaShoppingCart, FaCreditCard, FaUser, FaSignOutAlt } from "react-icons/fa";
+import { FaShoppingCart, FaCreditCard, FaUser, FaSignOutAlt, FaHome, FaChevronRight } from "react-icons/fa";
 import { customerLogout } from "../services/userservices";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../redux/Slices/userSlice";
-import CustomerOrdersTable from "./CustomerOrdersTable";
 import { persistor } from "../redux/store";
+import CustomerOrdersTable from "./CustomerOrdersTable";
+import CustomerReviews from "./CustomerReviews";
+import CustomerProfile from "./CustomerProfile";
 
 function CustomerDashboard() {
   const [activeMenu, setActiveMenu] = useState("orders");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // Define breadcrumb mapping
+  const breadcrumbMap = {
+    orders: "Orders",
+    reviews: "Reviews",
+    payments: "Payments",
+    profile: "Profile",
+  };
+
   const renderContent = () => {
     switch (activeMenu) {
       case "orders":
         return <CustomerOrdersTable />;
+      case "reviews":
+        return <CustomerReviews />;
       case "payments":
         return <Payments />;
       case "profile":
-        return <Profile />;
+        return <CustomerProfile />;
       default:
         return <h1 className="text-xl">Select a section</h1>;
     }
@@ -27,7 +39,7 @@ function CustomerDashboard() {
 
   const handleLogout = () => {
     try {
-      customerLogout().then((res) => {
+      customerLogout().then(() => {
         persistor.purge();
         dispatch(clearUser());
         navigate("/");
@@ -44,6 +56,7 @@ function CustomerDashboard() {
         <h2 className="text-xl font-bold mb-6 text-center">Customer Dashboard</h2>
         <ul className="space-y-4">
           <MenuItem label="Orders" icon={<FaShoppingCart />} isActive={activeMenu === "orders"} onClick={() => setActiveMenu("orders")} />
+          <MenuItem label="Reviews" icon={<FaCreditCard />} isActive={activeMenu === "reviews"} onClick={() => setActiveMenu("reviews")} />
           <MenuItem label="Payments" icon={<FaCreditCard />} isActive={activeMenu === "payments"} onClick={() => setActiveMenu("payments")} />
           <MenuItem label="Profile" icon={<FaUser />} isActive={activeMenu === "profile"} onClick={() => setActiveMenu("profile")} />
           <MenuItem label="Logout" icon={<FaSignOutAlt />} isActive={false} onClick={handleLogout} isLogout />
@@ -52,10 +65,16 @@ function CustomerDashboard() {
 
       {/* Content Area */}
       <div className="flex-grow p-6">
-        
-          {renderContent()}
-          
-        
+        {/* Breadcrumb Navigation */}
+        <div className="flex items-center text-gray-600 text-sm mb-4">
+          <FaHome className="text-blue-500" />
+          <span className="mx-2"><FaChevronRight /></span>
+          <span className="text-blue-500 font-semibold">Dashboard</span>
+          <span className="mx-2"><FaChevronRight /></span>
+          <span className="text-gray-900 font-semibold">{breadcrumbMap[activeMenu]}</span>
+        </div>
+
+        {renderContent()}
       </div>
     </div>
   );
@@ -83,16 +102,6 @@ function Payments() {
     <div className="p-6 bg-white text-gray-900 shadow-md rounded">
       <h1 className="text-2xl font-bold">Payments</h1>
       <p className="mt-4">Manage your payment methods and transactions.</p>
-    </div>
-  );
-}
-
-// Profile Component
-function Profile() {
-  return (
-    <div className="p-6 bg-white text-gray-900 shadow-md rounded">
-      <h1 className="text-2xl font-bold">My Profile</h1>
-      <p className="mt-4">Update your personal details and preferences.</p>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-const { adminLogin, adminRegister, adminLogout, adminVerifyProvider, getCustomers, getProviders, getOrdersView, adminRejectProvider } = require('../controllers/adminController')
+const { adminLogin, adminRegister, adminLogout, adminVerifyProvider, getCustomers, getProviders, getOrdersView, adminRejectProvider, getAdminProfile, updateAdminProfile, changeAdminPassword, getAdminReviews } = require('../controllers/adminController')
 
 const authAdmin = require('../middleware/adminAuth')
 
@@ -16,6 +16,11 @@ adminRoutes.get('/customers',authAdmin,getCustomers)
 adminRoutes.get('/providers',authAdmin,getProviders)
 adminRoutes.get('/orders',authAdmin,getOrdersView)
 
+
+adminRoutes.get("/profile", authAdmin, getAdminProfile);
+adminRoutes.put("/profile/update", authAdmin, updateAdminProfile);
+adminRoutes.put("/profile/change-password", authAdmin, changeAdminPassword);
+adminRoutes.get("/reviews", authAdmin, getAdminReviews);
 
 
 

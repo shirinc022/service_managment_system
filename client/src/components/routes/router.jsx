@@ -13,6 +13,7 @@ import AddService from '../../providerDashboard/AddService';
 import UpdateService from '../../providerDashboard/UpdateService';
 import BillConfirmationPage from '../../customerDashboard/BillConfirmationPage';
 import PaymentSuccess from '../../customerDashboard/PaymentSuccess';
+import Contact from '../pages/Contact';
 
 export const router  = createBrowserRouter([
         {
@@ -67,6 +68,10 @@ export const router  = createBrowserRouter([
             {
               path: "payment/success",
               element: <PaymentSuccess/>,
+            },
+            {
+              path: "contact",
+              element: <Contact/>,
             },
            
           ],

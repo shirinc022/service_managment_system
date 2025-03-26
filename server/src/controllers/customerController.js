@@ -82,7 +82,57 @@ const customerLogout = async (req,res)=>{
 }
 
 
+const getCustomerProfile = async (req, res) => {
+  try {
+    const customerId = req.customer;
+
+    const customer = await customerDb.findById(customerId).select("-password"); // Exclude password field
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    res.status(200).json({ message: "Profile fetched successfully", customer });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message || "Internal Server Error" });
+  }
+};
+
+
+const changeCustomerPassword = async (req, res) => {
+  try {
+    const customerId = req.customer;
+    const { oldPassword, newPassword } = req.body;
+    console.log(req.body);
+    
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ message: "Please provide both old and new passwords." });
+    }
+
+    const customer = await customerDb.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    const isMatch = await comparePassword(oldPassword, customer.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Old password is incorrect." });
+    }
+
+    const hashedPassword = await hashpassword(newPassword);
+    customer.password = hashedPassword;
+    await customer.save();
+
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message || "Internal Server Error" });
+  }
+};
 
 
 
-module.exports={customerRegister,customerLogin,customerLogout}
+
+
+
+module.exports={customerRegister,customerLogin,customerLogout,getCustomerProfile,changeCustomerPassword}

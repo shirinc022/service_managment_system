@@ -1,5 +1,6 @@
 const orderModel = require("../models/orderModel");
 const reviewModel = require("../models/reviewModel");
+const serviceModel = require("../models/serviceModel");
 
 const postReview=async (req,res)=>{
     try{
@@ -25,7 +26,12 @@ const postReview=async (req,res)=>{
       description,
     });
     await newReview.save();
-    res.status(201).json({ message: "Review submitted successfully", review: newReview });
+    const updatedOrder = await orderModel.findByIdAndUpdate(
+            orderId,
+            { reviewStatus: "Reviewed" },
+            { new: true } 
+          );
+    res.status(201).json({ message: "Review submitted successfully", review: newReview, oder: updatedOrder});
 
 
 
@@ -37,4 +43,108 @@ const postReview=async (req,res)=>{
 }
 
 
-module.exports = {postReview}
+const viewCustomerReview = async (req, res) => {
+  try {
+    const customerId = req.customer;
+
+    // Fetch all reviews for the particular customer
+    const reviews = await reviewModel.find({ customer_id: customerId }).populate('service_id');
+
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({ message: "No reviews found for this customer" });
+    }
+
+    res.status(200).json(reviews);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+
+const updateReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params; // Review ID from request params
+    const customerId = req.customer; // Customer ID from authentication
+    const { star, description } = req.body; // New review data
+
+    // Find the review to check if it belongs to the customer
+    const review = await reviewModel.findOne({ _id: reviewId, customer_id: customerId });
+
+    if (!review) {
+      return res.status(404).json({ message: "Review not found or unauthorized access" });
+    }
+
+    // Update review details
+    review.star = star || review.star;
+    review.description = description || review.description;
+    await review.save();
+
+    res.status(200).json({ message: "Review updated successfully", review });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const deleteReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const customerId = req.customer;
+
+    // Find the review
+    const review = await reviewModel.findOne({ _id: reviewId, customer_id: customerId });
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+
+    // Delete the review
+    await reviewModel.findByIdAndDelete(reviewId);
+
+    // Update the order to mark it as "Not Reviewed" (if needed)
+    await orderModel.findByIdAndUpdate(review.order_id, { reviewStatus: "Pending" });
+
+    res.status(200).json({ message: "Review deleted successfully" });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message || "Internal Server Error" });
+  }
+};
+
+
+const getProviderReviews = async (req, res) => {
+  try {
+    const providerId = req.provider;
+
+    // Find services offered by the provider
+    const services = await serviceModel.find({ provider_id: providerId });
+
+    if (!services.length) {
+      return res.status(404).json({ message: "No services found for this provider" });
+    }
+
+    // Extract service IDs
+    const serviceIds = services.map(service => service._id);
+
+    // Fetch reviews for these services
+    const reviews = await reviewModel.find({ service_id: { $in: serviceIds } }).populate("customer_id", "name email").populate("service_id");
+
+    res.status(200).json({ message: "Reviews fetched successfully", reviews });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+
+
+
+
+
+
+
+module.exports = {postReview,viewCustomerReview,updateReview,deleteReview,getProviderReviews}

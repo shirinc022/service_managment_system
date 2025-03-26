@@ -153,3 +153,72 @@ export const getBill = (orderId) =>{
 export const makePaymentOnStripe = (body) =>{
     return axiosInstance.post('/payment/checkout',body)
 }
+
+
+// submit review
+export const customerSubmitReview = (orderId,data) =>{
+    return axiosInstance.post(`/review/postreview/${orderId}`,data)
+}
+
+// customer get review
+export const customerGetReviews = () =>{
+    return axiosInstance.get('/review/customerReview')
+}
+
+export const customerUpdateReview = (reviewId,data) =>{
+    return axiosInstance.put(`/review/customerUpdateReview/${reviewId}`,data)
+}
+
+export const customerdeleteReview = (reviewId) =>{
+    return axiosInstance.delete(`/review/customerDeleteReview/${reviewId}`)
+}
+
+//customer profile
+
+export const getCustomerProfile = () =>{
+    return axiosInstance.get('/customer/profile')
+}
+
+export const updateCustomerPassword = (data) =>{
+    return axiosInstance.put('/customer/change-password',data)
+}
+
+//provider profile
+
+export const getProviderProfile = () =>{
+    return axiosInstance.get('/provider/profile')
+}
+
+export const updateProviderPassword = (data) =>{
+    return axiosInstance.put('/provider/change-password',data)
+}
+
+export const updateProviderPhone  = (data) =>{
+    return axiosInstance.put('/provider/update-phone',data)
+}
+
+// provider reviews
+
+export const providerGetReviews = () =>{
+    return axiosInstance.get('/review/providerReview')
+}
+
+// admin profile
+
+export const adminGetProfile = () =>{
+    return axiosInstance.get('/admin/profile')
+}
+
+export const adminChangePassword = (data) =>{
+    return axiosInstance.put('/admin/profile/change-password',data)
+}
+
+export const adminUpdateProfile = (data) =>{
+    return axiosInstance.put('/admin/profile/update',data)
+}
+
+// contact
+export const contact = (data) =>{
+    return axiosInstance.post('/contact',data)
+}
+

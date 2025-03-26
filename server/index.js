@@ -4,6 +4,8 @@ require('dotenv').config()
 const connectDB=require('./src/config/db')
 const router = require('./src/routes/router')
 var cookieParser = require('cookie-parser')
+const bodyParser=require('body-parser')
+
 const { paymentWebhook } = require('./src/controllers/paymentController')
 
 
@@ -12,7 +14,7 @@ const { paymentWebhook } = require('./src/controllers/paymentController')
 
 const app = express()
 connectDB()
-app.post('/webhook', express.raw({ type: 'application/json' }),paymentWebhook);
+app.post('/webhook', bodyParser.raw({ type: 'application/json' }),paymentWebhook);
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({

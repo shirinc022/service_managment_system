@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaShoppingCart, FaCreditCard, FaUser, FaSignOutAlt, FaUsers, FaUserCheck } from "react-icons/fa";
+import { FaShoppingCart, FaCreditCard, FaUser, FaSignOutAlt, FaUsers, FaUserCheck, FaHome, FaChevronRight } from "react-icons/fa";
 import { adminLogout } from "../services/userservices";
 import { clearUser } from "../redux/Slices/userSlice";
 import { useDispatch } from "react-redux";
@@ -8,11 +8,20 @@ import CustomerTable from "./CustomerTable";
 import ProviderTable from "./ProviderTable";
 import OrdersTable from "./OrderTable";
 import { persistor } from "../redux/store";
+import AdminProfile from "./AdminProfile";
 
 function AdminDashboard() {
   const [activeMenu, setActiveMenu] = useState("provider");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Define breadcrumb mapping
+  const breadcrumbMap = {
+    provider: "Providers",
+    customers: "Customers",
+    order: "Orders",
+    profile: "Profile",
+  };
 
   const renderContent = () => {
     switch (activeMenu) {
@@ -23,7 +32,7 @@ function AdminDashboard() {
       case "order":
         return <OrdersTable />;
       case "profile":
-        return <Profile />;
+        return <AdminProfile />;
       default:
         return <h1 className="text-xl">Select a section</h1>;
     }
@@ -57,9 +66,16 @@ function AdminDashboard() {
 
       {/* Content Area */}
       <div className="flex-grow p-6 flex flex-col">
-    
-          {renderContent()}
-        
+        {/* Breadcrumb Navigation */}
+        <div className="flex items-center text-gray-600 text-sm mb-4">
+          <FaHome className="text-blue-500" />
+          <span className="mx-2"><FaChevronRight /></span>
+          <span className="text-blue-500 font-semibold">Dashboard</span>
+          <span className="mx-2"><FaChevronRight /></span>
+          <span className="text-gray-900 font-semibold">{breadcrumbMap[activeMenu]}</span>
+        </div>
+
+        {renderContent()}
       </div>
     </div>
   );
@@ -78,16 +94,6 @@ function MenuItem({ label, icon, isActive, onClick, isLogout }) {
         {icon} {label}
       </button>
     </li>
-  );
-}
-
-// Profile Component
-function Profile() {
-  return (
-    <div className="p-6 bg-white text-gray-900 shadow-md rounded">
-      <h1 className="text-2xl font-bold">My Profile</h1>
-      <p className="mt-4">Update your personal details and preferences.</p>
-    </div>
   );
 }
 

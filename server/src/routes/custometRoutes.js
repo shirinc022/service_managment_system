@@ -1,4 +1,4 @@
-const { customerRegister, customerLogin, customerLogout, placeRequest } = require('../controllers/customerController')
+const { customerRegister, customerLogin, customerLogout, placeRequest, changeCustomerPassword, getCustomerProfile } = require('../controllers/customerController')
 const authCustomer = require('../middleware/customerAuth')
 
 
@@ -7,6 +7,10 @@ const customerRoutes=require('express').Router()
 customerRoutes.post('/register',customerRegister)
 customerRoutes.post('/login',customerLogin)
 customerRoutes.post('/logout',customerLogout)
+// profile
+customerRoutes.get("/profile",authCustomer, getCustomerProfile);
+customerRoutes.put("/change-password",authCustomer, changeCustomerPassword);
+
 //service request
 
 

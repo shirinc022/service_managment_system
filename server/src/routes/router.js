@@ -1,4 +1,5 @@
 // const { loginUser } = require('../controllers/loginController')
+const { contact } = require('../controllers/contactController')
 const { getServices, getOneService } = require('../controllers/providerController')
 const adminRoutes = require('./adminRoutes')
 const billRoutes = require('./billRoutes')
@@ -26,6 +27,7 @@ router.use('/payment',paymentRoutes)
 
 router.get('/services',getServices)
 router.get('/service/:serviceId',getOneService)
+router.post('/contact',contact)
 
 
 

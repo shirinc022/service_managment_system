@@ -227,80 +227,7 @@ const serviceUpdate = async (req, res) => {
 
 
 
-// const serviceUpdate = async (req, res) => {
-//   try {
-//     const { serviceId } = req.params;
-//     console.log("Received Data:", req.body);
-//     console.log("Received Files:", req.files);
-//     console.log("serviceId", serviceId)
 
-//     // Check if service ID is valid
-//     // if (!mongoose.Types.ObjectId.isValid(serviceId)) {
-//     //   return res.status(400).json({ error: "Invalid service ID" });
-//     // }
-
-//     // Find the existing service
-//     const existingService = await serviceModel.findById(serviceId);
-//     if (!existingService) {
-//       return res.status(404).json({ error: "Service not found" });
-//     }
-
-//     // Extract new image file paths if uploaded
-//     let updatedImages = existingService.images; // Keep existing images
-//     if (req.files && req.files.length > 0) {
-//       const filePaths = req.files.map((file) => file.path);
-//       const cloudinaryRes = await uploadToCloudinary(filePaths);
-//       updatedImages = [...existingService.images, ...cloudinaryRes]; // Append new images
-//     }
-
-//     // Update only provided fields
-//     const updatedData = {
-//       title: req.body.title || existingService.title,
-//       category: req.body.category || existingService.category,
-//       description: req.body.description || existingService.description,
-//       price: req.body.price || existingService.price,
-//       availability: req.body.availability || existingService.availability,
-//       service_area: req.body.service_area || existingService.service_area,
-//       images: updatedImages,
-//     };
-
-//     // Update the service
-//     const updatedService = await serviceModel.findByIdAndUpdate(
-//       serviceId,
-//       updatedData,
-//       { new: true, runValidators: true }
-//     );
-
-//     console.log("Updated Service:", updatedService);
-//     return res.status(200).json({ message: "Service updated successfully", service: updatedService });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(error.status || 500).json({ error: error.message || "Internal server error" });
-//   }
-// };
-
-
-// const serviceUpdate = async (req, res) => {
-//   try {
-//     const {serviceId} = req.params;
-//     // console.log(serviceId);
-//     console.log(req.body)
-//     console.log(req.files)
-//     const service = await serviceModel.findByIdAndUpdate(serviceId, req.body, {
-//       new: true,
-//       runValidators: true,
-//     });
-//     return res
-//       .status(200)
-//       .json({ message: "Service updated successfully", service });
-//       console.log(service)
-//   } catch (error) {
-//     console.log(error);
-//     res
-//       .status(error.status || 500)
-//       .json({ error: error.message || "internal server error" });
-//   }
-// };
 
 const serviceView = async (req, res) => {
   try {
@@ -405,6 +332,74 @@ const getOneService = async (req, res) => {
 };
 
 
+//profile view update
+
+// Get Provider Profile
+const getProviderProfile = async (req, res) => {
+  try {
+    const providerId = req.provider;
+    const provider = await providerDb.findById(providerId).select("-password");
+    if (!provider) {
+      return res.status(404).json({ message: "Provider not found" });
+    }
+    res.status(200).json({ provider });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Update Password
+const updateProviderPassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const providerId = req.provider;
+    const provider = await providerDb.findById(providerId);
+
+    if (!provider) {
+      return res.status(404).json({ message: "Provider not found" });
+    }
+
+    const isMatch = await comparePassword(oldPassword, provider.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Old password is incorrect" });
+    }
+
+    provider.password = await hashpassword(newPassword);
+    await provider.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const updateProviderPhone = async (req, res) => {
+  try {
+    const { phone } = req.body;
+    const providerId = req.provider;
+
+    const provider = await providerDb.findById(providerId);
+    if (!provider) {
+      return res.status(404).json({ message: "Provider not found" });
+    }
+
+    provider.phone = phone;
+    await provider.save();
+
+    res.status(200).json({ message: "Phone number updated successfully", phone: provider.phone });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+
+
+
+
 
 
 
@@ -422,5 +417,8 @@ module.exports = {
   serviceDelete,
   getServices,
   getOneService,
-  allProviderServiceView
+  allProviderServiceView,
+  getProviderProfile, 
+  updateProviderPassword,
+  updateProviderPhone
 };

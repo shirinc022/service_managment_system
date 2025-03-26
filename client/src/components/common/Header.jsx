@@ -88,7 +88,7 @@ const userData = useSelector((state) => state.user)
             <Link to="/services" >Services</Link>
             </li>
             <li>
-            <Link to="/" >Contact</Link>
+            <Link to="/contact" >Contact</Link>
             </li>
           </ul>
         </div>
@@ -103,7 +103,7 @@ const userData = useSelector((state) => state.user)
             <Link to="/services" >Services</Link>
             </li>
             <li>
-            <Link to="/" >Contact</Link>
+            <Link to="/contact" >Contact</Link>
             </li>
         </ul>
       </div>
