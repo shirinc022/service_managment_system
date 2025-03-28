@@ -8,6 +8,10 @@ const createToken = (id,role)=>{
  return jwt.sign({id,role},process.env.JWT_SECRETKEY,
  {expiresIn:maxAge}
 )}
+// const createCustomerToken = (id,role)=>{
+//     return jwt.sign({id,role},process.env.JWT_SECRETKEY,
+//     {expiresIn:maxAge}
+//    )}
 const createProviderToken = (id,role,verified)=>{
     return jwt.sign({id,role,verified},process.env.JWT_SECRETKEY,
     {expiresIn:maxAge}

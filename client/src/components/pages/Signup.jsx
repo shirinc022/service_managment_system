@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import {
   adminSignup,
   customerSignup,
+  customerVerified,
   providerSignup,
 } from "../../services/userservices";
 import { toast } from "react-toastify"; // For notifications
@@ -93,10 +94,17 @@ function Signup() {
   
     signupFunction(requestData, config) // Send requestData with config
       .then((res) => {
+        console.log(res);
+        
         console.log(res.data.message);
         toast.success(res.data.message);
-        dispatch(saveUser(res.data.user));
-        navigate("/login") 
+        const token = res.data.token
+        if (values.userType === "customer") {
+          navigate("/check-email");
+        } else {
+          dispatch(saveUser(res.data.user));
+          navigate("/login"); // ✅ Redirect admin & provider to login
+        }
       })
       .catch((err) => {
         console.log(err);

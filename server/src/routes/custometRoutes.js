@@ -1,10 +1,11 @@
-const { customerRegister, customerLogin, customerLogout, placeRequest, changeCustomerPassword, getCustomerProfile } = require('../controllers/customerController')
+const { customerRegister, customerLogin, customerLogout, placeRequest, changeCustomerPassword, getCustomerProfile, customerVerify } = require('../controllers/customerController')
 const authCustomer = require('../middleware/customerAuth')
 
 
 const customerRoutes=require('express').Router()
 
 customerRoutes.post('/register',customerRegister)
+customerRoutes.post('/verify/:token',customerVerify)
 customerRoutes.post('/login',customerLogin)
 customerRoutes.post('/logout',customerLogout)
 // profile

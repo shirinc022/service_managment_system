@@ -14,6 +14,8 @@ import UpdateService from '../../providerDashboard/UpdateService';
 import BillConfirmationPage from '../../customerDashboard/BillConfirmationPage';
 import PaymentSuccess from '../../customerDashboard/PaymentSuccess';
 import Contact from '../pages/Contact';
+import VerifyEmailMessage from '../pages/VerifyEmailMessage';
+import CheckEmailMessage from '../pages/CheckEmailMessage ';
 
 export const router  = createBrowserRouter([
         {
@@ -73,6 +75,15 @@ export const router  = createBrowserRouter([
               path: "contact",
               element: <Contact/>,
             },
+            {
+              path: "check-email",  // ✅ Show "Check Email" message
+              element: <CheckEmailMessage />,
+            },
+            {
+              path: "verify/:token", // ✅ Handle verification
+              element: <VerifyEmailMessage />,
+            },
+           
            
           ],
         },

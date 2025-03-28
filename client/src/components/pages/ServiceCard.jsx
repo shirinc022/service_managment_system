@@ -1,6 +1,6 @@
-import React from 'react';
-import { FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function ServiceCard({ service }) {
   const navigate = useNavigate();
@@ -25,18 +25,22 @@ function ServiceCard({ service }) {
       <div className="card bg-base-100 shadow-xl border border-gray-200">
         <figure>
           <div className="h-48 w-full">
-            <img src={service.images[0]} className="w-full h-full object-cover" alt={service.title} />
+            <img
+              src={service.images[0]}
+              className="w-full h-full object-cover"
+              alt={service.title}
+            />
           </div>
         </figure>
         <div className="card-body">
           <h2 className="card-title h-6 w-3/4">{service.title}</h2>
           <p className="text-gray-600">By {service.provider_id?.name}</p>
 
-          {/* Dynamic Star Rating */}
+          {/* Display Average Rating and Total Reviews */}
           <div className="flex items-center gap-2">
-            <div className="flex">{renderStars(service.rating || 0)}</div>
+            <div className="flex">{renderStars(service.averageRating || 0)}</div>
             <span className="text-gray-500 text-sm">
-              {service.reviews?.length || 0} reviews
+              {service.totalReviews || 0} reviews
             </span>
           </div>
 

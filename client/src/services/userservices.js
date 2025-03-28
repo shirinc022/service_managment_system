@@ -37,6 +37,10 @@ export const providerSignup = (data) =>{
 export const customerSignup = (data) =>{
     return axiosInstance.post('/customer/register',data)
 }
+// customer verification
+export const customerVerified = (token) =>{
+    return axiosInstance.post(`/customer/verify/${token}`)
+}
 
 export const customerLogout = () =>{
     return axiosInstance.post('/customer/logout')
@@ -158,6 +162,11 @@ export const makePaymentOnStripe = (body) =>{
 // submit review
 export const customerSubmitReview = (orderId,data) =>{
     return axiosInstance.post(`/review/postreview/${orderId}`,data)
+}
+
+// get reviews in product detail page
+export const listSingleServiceReview = (serviceId) =>{
+    return axiosInstance.get(`/review/serviceReviews/${serviceId}`)
 }
 
 // customer get review

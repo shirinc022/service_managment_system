@@ -140,6 +140,39 @@ const getProviderReviews = async (req, res) => {
 };
 
 
+// Listing reviews and rating for each service in detail page
+
+const listSingleServiceReview = async (req, res) => {
+  try {
+    const { serviceId } = req.params;
+
+    const service = await serviceModel.findById(serviceId).populate("provider_id");
+
+    if (!service) {
+      return res.status(404).json({ message: "Service not found" });
+    }
+
+    // Aggregate reviews for the service
+    const reviews = await reviewModel.find({ service_id: serviceId }).populate("customer_id", "name");
+
+    // Calculate average rating
+    const totalReviews = reviews.length;
+    const averageRating = totalReviews > 0
+      ? reviews.reduce((sum, review) => sum + review.star, 0) / totalReviews
+      : 0;
+
+    res.status(200).json({
+      service,
+      totalReviews,
+      averageRating: averageRating.toFixed(1),
+      reviews,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 
 
@@ -147,4 +180,6 @@ const getProviderReviews = async (req, res) => {
 
 
 
-module.exports = {postReview,viewCustomerReview,updateReview,deleteReview,getProviderReviews}
+
+
+module.exports = {postReview,viewCustomerReview,updateReview,deleteReview,getProviderReviews,listSingleServiceReview}
