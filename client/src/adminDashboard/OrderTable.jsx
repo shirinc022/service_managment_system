@@ -39,7 +39,7 @@ export default function OrdersTable() {
               <tr key={order._id} className="hover:bg-primary/10 border-b border-base-300">
                 <td className="p-4">{index + 1}</td>
                 <td className="p-4 font-semibold text-base-content">{order.service_id?.title}</td>
-                <td className="p-4 font-semibold text-base-content">{order.Provider_id.name}</td>
+                <td className="p-4 font-semibold text-base-content">{order.Provider_id?.name}</td>
                 <td className="p-4 text-gray-500">{order.customer_id.name}</td>
                 <td className="p-4 flex items-center gap-2 w-45"> 
                   {/* <FaMapMarkerAlt className="text-red-500" />  */}
