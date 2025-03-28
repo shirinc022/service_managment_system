@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 import {
   providerAcceptOrder,
   providerAllOrders,
