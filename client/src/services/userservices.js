@@ -59,6 +59,10 @@ export const adminGetCustomers = () =>{
     return axiosInstance.get('/admin/customers')
 }
 
+export const adminDeleteCustomer = (customerId)=>{
+    return axiosInstance.delete(`/admin/deletecustomer/${customerId}`)
+}
+
 export const adminGetProviders = () =>{
     return axiosInstance.get('/admin/providers')
 }
@@ -72,6 +76,10 @@ export const adminRejectProvider = (providerId) =>{
     return axiosInstance.put(`/admin/reject/${providerId}`)
 }
 
+
+export const adminDeleteProvider = (providerId) =>{
+    return axiosInstance.delete(`/admin/delete/${providerId}`)
+}
 
 export const adminGetOrders = () =>{
     return axiosInstance.get('/admin/orders')
@@ -231,3 +239,21 @@ export const contact = (data) =>{
     return axiosInstance.post('/contact',data)
 }
 
+
+
+// get payment bills for different users
+
+// get payments for admin dashboard
+export const getAdminPayments = () =>{
+    return axiosInstance.get('/bill/adminpayments')
+}
+
+// get payments for provider dashboard
+export const getProviderPayments = () =>{
+    return axiosInstance.get('/bill/providerpayments')
+}
+
+// get payments for customer dashboard
+export const getCustomerPayments = () =>{
+    return axiosInstance.get('/bill/customerpayments')
+}

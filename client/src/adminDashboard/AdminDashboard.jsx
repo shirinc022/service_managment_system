@@ -9,6 +9,7 @@ import ProviderTable from "./ProviderTable";
 import OrdersTable from "./OrderTable";
 import { persistor } from "../redux/store";
 import AdminProfile from "./AdminProfile";
+import AdminPayments from "./AdminPayments";
 
 function AdminDashboard() {
   const [activeMenu, setActiveMenu] = useState("provider");
@@ -21,6 +22,7 @@ function AdminDashboard() {
     customers: "Customers",
     order: "Orders",
     profile: "Profile",
+    payments: "Payments",
   };
 
   const renderContent = () => {
@@ -33,6 +35,8 @@ function AdminDashboard() {
         return <OrdersTable />;
       case "profile":
         return <AdminProfile />;
+        case "payments":
+        return <AdminPayments />;
       default:
         return <h1 className="text-xl">Select a section</h1>;
     }
@@ -59,6 +63,7 @@ function AdminDashboard() {
           <MenuItem label="Providers" icon={<FaUserCheck />} isActive={activeMenu === "provider"} onClick={() => setActiveMenu("provider")} />
           <MenuItem label="Customers" icon={<FaUsers />} isActive={activeMenu === "customers"} onClick={() => setActiveMenu("customers")} />
           <MenuItem label="Orders" icon={<FaShoppingCart />} isActive={activeMenu === "order"} onClick={() => setActiveMenu("order")} />
+          <MenuItem label="Payments" icon={<FaCreditCard />} isActive={activeMenu === "payments"} onClick={() => setActiveMenu("payments")} />
           <MenuItem label="Profile" icon={<FaUser />} isActive={activeMenu === "profile"} onClick={() => setActiveMenu("profile")} />
           <MenuItem label="Logout" icon={<FaSignOutAlt />} isActive={false} onClick={handleLogout} isLogout />
         </ul>

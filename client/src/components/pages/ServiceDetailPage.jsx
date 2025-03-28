@@ -57,7 +57,7 @@ function ServiceDetailPage() {
       navigate('/customer-dashboard');
     } catch (error) {
       console.error("Error submitting request:", error);
-      toast.error("Failed to book service.");
+      toast.error("Failed to book service. Please Login before booking");
     }
   };
 
@@ -109,7 +109,7 @@ function ServiceDetailPage() {
           <p className="text-gray-600 leading-relaxed">{serviceData.description}</p>
         </div>
 
-        <p className="text-2xl font-semibold mt-5 text-primary">${serviceData.price}</p>
+        <p className="text-2xl font-semibold mt-5 text-primary">₹ {serviceData.price}</p>
 
         {/* Book Now Button */}
         <button className="btn btn-primary w-full mt-6 text-lg py-3 rounded-lg shadow-lg" onClick={() => document.getElementById("bookingModal").showModal()}>

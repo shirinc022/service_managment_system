@@ -84,10 +84,8 @@ export default function ProviderOrdersTable() {
     totalPrice: 0,
   });
 
-  // Open Modal
   const openBillModal = (order) => {
     setSelectedOrder(order);
-
     setBill({
       basicAmount: order.price,
       materialCost: "",
@@ -98,35 +96,27 @@ export default function ProviderOrdersTable() {
     setIsModalOpen(true);
   };
 
-  // Close Modal
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
-  // Handle Input Changes & Calculate Total
   const handleBillChange = (e) => {
     const { name, value } = e.target;
     const updatedBill = { ...bill, [name]: value };
-
-    // Calculate Total Price
     const total =
       Number(updatedBill.basicAmount) +
       Number(updatedBill.materialCost) +
       Number(updatedBill.extraCharges);
-
     updatedBill.totalPrice = total;
     setBill(updatedBill);
   };
 
-  // Submit Bill
   const handleSubmitBill = () => {
     console.log(selectedOrder._id);
-
     providerBillGeneration(selectedOrder._id, bill)
       .then((res) => {
         console.log(res.data.meassage);
-
-        toast.success("Bill send successfully");
+        toast.success("Bill sent successfully");
         closeModal();
         providerBillsent(selectedOrder._id)
           .then((res) => {
@@ -162,158 +152,35 @@ export default function ProviderOrdersTable() {
               <th className="p-2 w-25 text-left">Customer</th>
               <th className="p-2 w-40 text-left">Address</th>
               <th className="p-2 w-40 text-left">Payment</th>
-
               <th className="p-2 w-25 text-left">Status</th>
               <th className="p-2 w-25 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
             {orders.map((order, index) => (
-              <tr
-                key={order._id}
-                className="hover:bg-primary/10 border-b border-base-300"
-              >
+              <tr key={order._id} className="hover:bg-primary/10 border-b border-base-300">
                 <td className="p-2">{index + 1}</td>
-                <td className="p-2 font-semibold text-base-content">
-                  {order.service_id?.title}
-                </td>
-                <td className="p-2 font-semibold text-base-content">
-                  {order.customer_id?.name}
+                <td className="p-2 font-semibold text-base-content">{order.service_id?.title}</td>
+                <td className="p-2 font-semibold text-base-content">{order.customer_id?.name}</td>
+                <td className="p-2">{order.customer_name} <br /> {order.customer_phone} <br /> {order.customer_address}<br /> {order.customer_location}</td>
+                <td className="p-2">
+                  <button className={`font-bold badge ${order.payment === "Paid" ? "badge-success" : "badge-warning"}`}>{order.payment}</button>
                 </td>
                 <td className="p-2">
-                  {order.customer_name} <br /> {order.customer_phone} <br />{" "}
-                  {order.customer_address}
-                  <br /> {order.customer_location}
-                </td>
-                <td className="p-2">
-                  <button
-                    className={`font-bold badge ${
-                      order.payment === "Paid"
-                        ? "badge-success"
-                        : "badge-warning"
-                    }`}
-                  >
-                    {order.payment}
-                  </button>
-                </td>
-
-                <td className="p-2">
-                  <button
-                    className={`font-bold badge ${
-                      order.status === "Completed"
-                        ? "badge-success"
-                        : order.status === "Rejected"
-                        ? "badge-error"
-                        : "badge-warning"
-                    }`}
-                  >
-                    {order.status}
-                  </button>
+                  <button className={`font-bold badge ${order.status === "Completed" ? "badge-success" : order.status === "Rejected" ? "badge-error" : "badge-warning"}`}>{order.status}</button>
                 </td>
                 <td className="p-2 space-x-2">
-                  {order.status === "Pending" && (
-                    <>
-                      <button
-                        onClick={() => handleAccept(order._id)}
-                        className="btn btn-primary btn-sm"
-                      >
-                        Accept
-                      </button>
-                      <button
-                        onClick={() => handleReject(order._id)}
-                        className="btn btn-error btn-sm"
-                      >
-                        Reject
-                      </button>
-                    </>
-                  )}
-                  {order.status === "Accepted" && (
-                    <div className="flex gap-2">
-                      {/* Mark as Completed Button */}
-                      <button
-                        onClick={() => handleComplete(order._id)}
-                        className="btn btn-success btn-sm"
-                      >
-                        Mark as Completed
-                      </button>
-
-                      {/* Contact Button */}
-                      <a
-                        href={`tel:${order.customer_phone}`}
-                        className="btn btn-primary btn-sm flex items-center gap-1"
-                      >
-                        <FaPhone /> Contact
-                      </a>
-                    </div>
-                  )}
-
-                  {order.status === "Completed" && (
-                    <button
-                      onClick={() => openBillModal(order)}
-                      className="btn btn-info btn-sm"
-                    >
-                      Send Bill
-                    </button>
-                  )}
+                  {order.payment === "Paid" ? (
+                    <button className="btn btn-success btn-sm">Payment Received</button>
+                  ) : order.status === "Completed" ? (
+                    <button onClick={() => openBillModal(order)} className="btn btn-info btn-sm">Send Bill</button>
+                  ) : null}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-      {/* Bill Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h3 className="text-lg font-bold mb-4">Send Bill</h3>
-            <div className="space-y-3">
-              <input
-                type="number"
-                name="basicAmount"
-                placeholder="Basic Amount"
-                className="input input-bordered w-full"
-                value={bill.basicAmount}
-                onChange={handleBillChange}
-              />
-              <input
-                type="number"
-                name="materialCost"
-                placeholder="Material Cost"
-                className="input input-bordered w-full"
-                value={bill.materialCost}
-                onChange={handleBillChange}
-              />
-              <input
-                type="number"
-                name="extraCharges"
-                placeholder="Other Extra Charges"
-                className="input input-bordered w-full"
-                value={bill.extraCharges}
-                onChange={handleBillChange}
-              />
-              <textarea
-                name="description"
-                placeholder="Description"
-                className="textarea textarea-bordered w-full"
-                value={bill.description}
-                onChange={handleBillChange}
-              ></textarea>
-              <div className="text-xl font-bold text-center">
-                Total: ${bill.totalPrice}
-              </div>
-            </div>
-            <div className="flex justify-between mt-4">
-              <button onClick={closeModal} className="btn btn-outline">
-                Cancel
-              </button>
-              <button onClick={handleSubmitBill} className="btn btn-primary">
-                Submit Bill
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

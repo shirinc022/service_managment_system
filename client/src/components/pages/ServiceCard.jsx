@@ -45,7 +45,7 @@ function ServiceCard({ service }) {
           </div>
 
           {/* Price */}
-          <p className="font-semibold text-lg text-blue-600">${service.price}</p>
+          <p className="font-semibold text-lg text-blue-600">₹ {service.price}</p>
 
           {/* Action Button */}
           <div className="card-actions justify-end">

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaUserCheck, FaTimesCircle, FaFilePdf } from "react-icons/fa";
-import { adminGetProviders, adminRejectProvider, adminVerifyProvider } from "../services/userservices";
+import { adminDeleteProvider, adminGetProviders, adminRejectProvider, adminVerifyProvider } from "../services/userservices";
 
 export default function ProviderTable() {
   const [providers, setProviders] = useState([]);
@@ -43,6 +43,17 @@ export default function ProviderTable() {
     })
 }
 
+const handleDelete = (providerId) => {
+  adminDeleteProvider(providerId)
+    .then((res) => {
+      console.log(res);
+      window.location.reload();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 
 
   return (
@@ -83,9 +94,9 @@ export default function ProviderTable() {
                       </>
                     )}
                     {provider.verification_status !== "Pending" && (
-                      <button className="btn btn-outline btn-error btn-sm" onClick={() => setProviders(providers.filter(p => p._id !== provider._id))}>
-                        <FaTimesCircle className="w-4 h-4" /> Delete
-                      </button>
+                     <button className="btn btn-outline btn-error btn-sm" onClick={() => handleDelete(provider._id)}>
+                     <FaTimesCircle className="w-4 h-4" /> Delete
+                   </button>
                     )}
                   </td>
                 </tr>

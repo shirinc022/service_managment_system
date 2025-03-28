@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaShoppingCart, FaCreditCard, FaUser, FaSignOutAlt, FaHome, FaChevronRight } from "react-icons/fa";
+import { FaShoppingCart, FaCreditCard, FaUser, FaSignOutAlt, FaHome, FaChevronRight ,FaComment} from "react-icons/fa";
 import { customerLogout } from "../services/userservices";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -8,6 +8,7 @@ import { persistor } from "../redux/store";
 import CustomerOrdersTable from "./CustomerOrdersTable";
 import CustomerReviews from "./CustomerReviews";
 import CustomerProfile from "./CustomerProfile";
+import CustomerPayments from "./CustomerPayments";
 
 function CustomerDashboard() {
   const [activeMenu, setActiveMenu] = useState("orders");
@@ -29,7 +30,7 @@ function CustomerDashboard() {
       case "reviews":
         return <CustomerReviews />;
       case "payments":
-        return <Payments />;
+        return <CustomerPayments />;
       case "profile":
         return <CustomerProfile />;
       default:
@@ -56,7 +57,7 @@ function CustomerDashboard() {
         <h2 className="text-xl font-bold mb-6 text-center">Customer Dashboard</h2>
         <ul className="space-y-4">
           <MenuItem label="Orders" icon={<FaShoppingCart />} isActive={activeMenu === "orders"} onClick={() => setActiveMenu("orders")} />
-          <MenuItem label="Reviews" icon={<FaCreditCard />} isActive={activeMenu === "reviews"} onClick={() => setActiveMenu("reviews")} />
+          <MenuItem label="Reviews" icon={<FaComment />} isActive={activeMenu === "reviews"} onClick={() => setActiveMenu("reviews")} />
           <MenuItem label="Payments" icon={<FaCreditCard />} isActive={activeMenu === "payments"} onClick={() => setActiveMenu("payments")} />
           <MenuItem label="Profile" icon={<FaUser />} isActive={activeMenu === "profile"} onClick={() => setActiveMenu("profile")} />
           <MenuItem label="Logout" icon={<FaSignOutAlt />} isActive={false} onClick={handleLogout} isLogout />
@@ -96,14 +97,6 @@ function MenuItem({ label, icon, isActive, onClick, isLogout }) {
   );
 }
 
-// Payments Component
-function Payments() {
-  return (
-    <div className="p-6 bg-white text-gray-900 shadow-md rounded">
-      <h1 className="text-2xl font-bold">Payments</h1>
-      <p className="mt-4">Manage your payment methods and transactions.</p>
-    </div>
-  );
-}
+
 
 export default CustomerDashboard;

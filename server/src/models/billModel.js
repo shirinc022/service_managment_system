@@ -4,17 +4,17 @@ const billSchema = new mongoose.Schema(
   {
     order_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Order",
+      ref: "Orders",
       required: true,
     },
     provider_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Providers",
       required: true,
     },
     customer_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Customers",
       required: true,
     },
     basicAmount: {

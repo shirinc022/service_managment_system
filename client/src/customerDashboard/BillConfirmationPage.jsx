@@ -76,15 +76,15 @@ function BillConfirmationPage() {
         <div className="space-y-4">
           <div className="flex justify-between">
             <span className="font-semibold">Basic Amount</span>
-            <span>$ {billDetails.basicAmount}</span>
+            <span>₹ {billDetails.basicAmount}</span>
           </div>
           <div className="flex justify-between">
             <span className="font-semibold">Material Cost</span>
-            <span>${billDetails.materialCost}</span>
+            <span>₹ {billDetails.materialCost}</span>
           </div>
           <div className="flex justify-between">
             <span className="font-semibold">Extra Charges</span>
-            <span>${billDetails.extraCharges}</span>
+            <span>₹ {billDetails.extraCharges}</span>
           </div>
           <div className="flex justify-between">
             <span className="font-semibold">Description</span>
@@ -92,7 +92,7 @@ function BillConfirmationPage() {
           </div>
           <div className="flex justify-between text-xl font-semibold text-green-500">
             <span>Total Price</span>
-            <span>${billDetails.totalPrice}</span>
+            <span>₹ {billDetails.totalPrice}</span>
           </div>
         </div>
       </div>
@@ -100,7 +100,7 @@ function BillConfirmationPage() {
       {/* Payment Status and Confirmation */}
       <div className="text-lg text-center mb-6">
         <p>Your total payment amount is:</p>
-        <div className="text-xl font-semibold text-green-500">${billDetails.totalPrice}</div>
+        <div className="text-xl font-semibold text-green-500">₹ {billDetails.totalPrice}</div>
       </div>
 
       <div className="flex justify-center mb-6">

@@ -82,7 +82,47 @@ const getBillByOrder = async (req,res)=>{
 
 
 
-module.exports={createBill,getBillByOrder}
+
+// ✅ Get all bills (For Admin)
+const getAdminPayments = async (req, res) => {
+  try {
+    const bills = await billModel.find().populate("customer_id provider_id order_id");
+    console.log(bills);
+    
+    res.status(200).json({ success: true, bills });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error fetching payments", error });
+  }
+};
+
+// ✅ Get payments for a specific provider
+const getProviderPayments = async (req, res) => {
+  try {
+    const providerId = req.provider; 
+    const bills = await billModel.find({ provider_id: providerId }).populate("customer_id order_id provider_id");
+    
+    res.status(200).json({ success: true, bills });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error fetching provider payments", error });
+  }
+};
+
+// ✅ Get payments for a specific customer
+const getCustomerPayments = async (req, res) => {
+  try {
+    const customerId = req.customer; 
+    console.log(customerId)
+    const bills = await billModel.find({ customer_id: customerId }).populate("provider_id order_id");
+
+    res.status(200).json({ success: true, bills });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error fetching customer payments", error });
+  }
+};
+
+
+
+module.exports={createBill,getBillByOrder,getAdminPayments,getProviderPayments,getCustomerPayments}
 
 
 

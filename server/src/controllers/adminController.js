@@ -117,6 +117,45 @@ const adminRejectProvider =async (req, res) => {
 };
 
 
+const adminDeleteProvider = async (req, res) => {
+  try {
+    const { providerId } = req.params;
+
+    // Find and delete the provider
+    const deletedProvider = await providerModel.findByIdAndDelete(providerId);
+
+    if (!deletedProvider) {
+      return res.status(404).json({ error: "Provider not found" });
+    }
+
+    res.status(200).json({ message: "Provider deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting provider:", error);
+    res
+      .status(error.status || 500)
+      .json({ error: error.message || "Internal server error" });
+  }
+};
+
+const adminDeleteCustomer = async (req, res) => {
+  try {
+    const { customerId } = req.params;
+
+    // Find and delete the customer
+    const deletedCustomer = await customerModel.findByIdAndDelete(customerId);
+
+    if (!deletedCustomer) {
+      return res.status(404).json({ success: false, message: "Customer not found" });
+    }
+
+    res.status(200).json({ success: true, message: "Customer deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting customer:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+
 const getCustomers = async(req,res)=>{
   try{
 
@@ -220,4 +259,4 @@ const getAdminReviews = async (req, res) => {
 };
 
 
-module.exports = { adminRegister, adminLogin, adminLogout , adminVerifyProvider,getCustomers,getProviders,getOrdersView, adminRejectProvider,getAdminProfile, updateAdminProfile, changeAdminPassword, getAdminReviews};
+module.exports = { adminRegister, adminLogin, adminLogout , adminVerifyProvider,adminDeleteCustomer,getCustomers,getProviders,getOrdersView, adminRejectProvider,adminDeleteProvider,getAdminProfile, updateAdminProfile, changeAdminPassword, getAdminReviews};

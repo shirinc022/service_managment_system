@@ -9,6 +9,7 @@ import ProviderOrders from "./ProviderOrders";
 import { persistor } from "../redux/store";
 import ProviderProfile from "./ProviderProfile";
 import ProviderReviews from "./ProviderReviews";
+import ProviderPayments from "./ProviderPayments";
 
 function ProviderDashboard() {
   const [activeMenu, setActiveMenu] = useState("orders");
@@ -31,7 +32,7 @@ function ProviderDashboard() {
       case "orders":
         return <ProviderOrders />;
       case "payments":
-        return <Payments />;
+        return <ProviderPayments />;
       case "profile":
         return <ProviderProfile />;
       case "reviews":
@@ -101,14 +102,5 @@ function MenuItem({ label, icon, isActive, onClick, isLogout }) {
   );
 }
 
-// Payments Component
-function Payments() {
-  return (
-    <div className="p-6 bg-white text-gray-900 shadow-md rounded">
-      <h1 className="text-2xl font-bold">Payments</h1>
-      <p className="mt-4">Manage your payment methods and transactions.</p>
-    </div>
-  );
-}
 
 export default ProviderDashboard;
