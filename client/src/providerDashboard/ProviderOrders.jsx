@@ -9,9 +9,11 @@ import {
   providerRejectOrder,
 } from "../services/userservices";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function ProviderOrdersTable() {
   const [orders, setOrders] = useState([]);
+  const navigate=useNavigate()
 
   useEffect(() => {
     providerAllOrders()
@@ -74,69 +76,73 @@ export default function ProviderOrdersTable() {
       });
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [bill, setBill] = useState({
-    basicAmount: "",
-    materialCost: "",
-    extraCharges: "",
-    description: "",
-    totalPrice: 0,
-  });
-
-  const openBillModal = (order) => {
-    setSelectedOrder(order);
-    setBill({
-      basicAmount: order.price,
-      materialCost: "",
-      extraCharges: "",
-      description: "",
-      totalPrice: 0,
-    });
-    setIsModalOpen(true);
+  const openBillPage = (order) => {
+    navigate("/send-bill", { state: { order } });
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [selectedOrder, setSelectedOrder] = useState(null);
+  // const [bill, setBill] = useState({
+  //   basicAmount: "",
+  //   materialCost: "",
+  //   extraCharges: "",
+  //   description: "",
+  //   totalPrice: 0,
+  // });
 
-  const handleBillChange = (e) => {
-    const { name, value } = e.target;
-    const updatedBill = { ...bill, [name]: value };
-    const total =
-      Number(updatedBill.basicAmount) +
-      Number(updatedBill.materialCost) +
-      Number(updatedBill.extraCharges);
-    updatedBill.totalPrice = total;
-    setBill(updatedBill);
-  };
+  // const openBillModal = (order) => {
+  //   setSelectedOrder(order);
+  //   setBill({
+  //     basicAmount: order.price,
+  //     materialCost: "",
+  //     extraCharges: "",
+  //     description: "",
+  //     totalPrice: 0,
+  //   });
+  //   setIsModalOpen(true);
+  // };
 
-  const handleSubmitBill = () => {
-    console.log(selectedOrder._id);
-    providerBillGeneration(selectedOrder._id, bill)
-      .then((res) => {
-        console.log(res.data.message);
-        toast.success("Bill sent successfully");
-        closeModal();
-        providerBillsent(selectedOrder._id)
-          .then((res) => {
-            console.log(res);
-            setOrders(
-              orders.map((order) =>
-                order._id === selectedOrder._id
-                  ? { ...order, status: "Bill Sent" }
-                  : order
-              )
-            );
-          })
-          .catch((error) => {
-            console.log("error", error);
-          });
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
-  };
+  // const closeModal = () => {
+  //   setIsModalOpen(false);
+  // };
+
+  // const handleBillChange = (e) => {
+  //   const { name, value } = e.target;
+  //   const updatedBill = { ...bill, [name]: value };
+  //   const total =
+  //     Number(updatedBill.basicAmount) +
+  //     Number(updatedBill.materialCost) +
+  //     Number(updatedBill.extraCharges);
+  //   updatedBill.totalPrice = total;
+  //   setBill(updatedBill);
+  // };
+
+  // const handleSubmitBill = () => {
+  //   console.log(selectedOrder._id);
+  //   providerBillGeneration(selectedOrder._id, bill)
+  //     .then((res) => {
+  //       console.log(res.data.message);
+  //       toast.success("Bill sent successfully");
+  //       closeModal();
+  //       providerBillsent(selectedOrder._id)
+  //         .then((res) => {
+  //           console.log(res);
+  //           setOrders(
+  //             orders.map((order) =>
+  //               order._id === selectedOrder._id
+  //                 ? { ...order, status: "Bill Sent" }
+  //                 : order
+  //             )
+  //           );
+  //         })
+  //         .catch((error) => {
+  //           console.log("error", error);
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       console.log("error", error);
+  //     });
+  // };
 
   return (
     <div className="overflow-x-auto p-4">
@@ -176,78 +182,104 @@ export default function ProviderOrdersTable() {
                   </button>
                 </td>
                 <td className="p-2 space-x-2">
-                  {order.status === "Pending" && (
-                    <>
-                      <button onClick={() => handleAccept(order._id)} className="btn btn-success btn-sm">Accept</button>
-                      <button onClick={() => handleReject(order._id)} className="btn btn-error btn-sm">Reject</button>
-                    </>
-                  )}
-                  {order.status === "Accepted" && (
-                    <button onClick={() => handleComplete(order._id)} className="btn btn-warning btn-sm">Mark as Complete</button>
-                  )}
-                  {order.payment === "Paid" ? (
-                    <button className="btn btn-success btn-sm">Payment Received</button>
-                  ) : order.status === "Completed" ? (
-                    <button onClick={() => openBillModal(order)} className="btn btn-info btn-sm">Send Bill</button>
-                  ) : null}
-                </td>
+  {order.status === "Pending" && (
+    <>
+      <button
+        onClick={() => handleAccept(order._id)}
+        className="btn btn-success btn-sm"
+      >
+        Accept
+      </button>
+      <button
+        onClick={() => handleReject(order._id)}
+        className="btn btn-error btn-sm"
+      >
+        Reject
+      </button>
+    </>
+  )}
+
+  {order.status === "Accepted" && (
+    <button
+      onClick={() => handleComplete(order._id)}
+      className="btn btn-warning btn-sm"
+    >
+      Mark as Complete
+    </button>
+  )}
+
+  {order.payment === "Paid" ? (
+    <button className="btn btn-success btn-sm">Payment Received</button>
+  ) : order.status === "Completed" ? (
+    order.billStatus === "Bill sent" ? (
+      <button className="btn btn-disabled btn-sm">Bill Sent</button>
+    ) : (
+      <button
+        onClick={() => openBillPage(order)}
+        className="btn btn-info btn-sm"
+      >
+        Send Bill
+      </button>
+    )
+  ) : null}
+</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
        {/* Bill Modal */}
- {isModalOpen && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-      <h3 className="text-lg font-bold mb-4">Send Bill</h3>
-      <div className="space-y-3">
-        <input
+ {/* {isModalOpen && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"> */}
+    {/* <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+      <h3 className="text-lg font-bold mb-4">Send Bill</h3> */}
+      {/* <div className="space-y-3"> */}
+        {/* <input
           type="number"
           name="basicAmount"
           placeholder="Basic Amount"
           className="input input-bordered w-full"
           value={bill.basicAmount}
           onChange={handleBillChange}
-        />
-        <input
+        /> */}
+        {/* <input
           type="number"
           name="materialCost"
           placeholder="Material Cost"
           className="input input-bordered w-full"
           value={bill.materialCost}
           onChange={handleBillChange}
-        />
-        <input
+        /> */}
+        {/* <input
           type="number"
           name="extraCharges"
           placeholder="Other Extra Charges"
           className="input input-bordered w-full"
           value={bill.extraCharges}
           onChange={handleBillChange}
-        />
-        <textarea
+        /> */}
+        {/* <textarea
           name="description"
           placeholder="Description"
           className="textarea textarea-bordered w-full"
           value={bill.description}
           onChange={handleBillChange}
-        ></textarea>
-        <div className="text-xl font-bold text-center">
+        ></textarea> */}
+        {/* <div className="text-xl font-bold text-center">
           Total: ₹ {bill.totalPrice}
-        </div>
-      </div>
-      <div className="flex justify-between mt-4">
+        </div> */}
+      {/* </div> */}
+      {/* <div className="flex justify-between mt-4">
         <button onClick={closeModal} className="btn btn-outline">
           Cancel
         </button>
         <button onClick={handleSubmitBill} className="btn btn-primary">
           Submit Bill
         </button>
-      </div>
-    </div>
-  </div>
-)}
+      </div> */}
+    {/* </div> */}
+  {/* </div>
+)} */}
     </div>
   );
 }

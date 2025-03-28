@@ -16,6 +16,7 @@ import PaymentSuccess from '../../customerDashboard/PaymentSuccess';
 import Contact from '../pages/Contact';
 import VerifyEmailMessage from '../pages/VerifyEmailMessage';
 import CheckEmailMessage from '../pages/CheckEmailMessage ';
+import SendBill from '../../providerDashboard/SendBill';
 
 export const router  = createBrowserRouter([
         {
@@ -83,7 +84,10 @@ export const router  = createBrowserRouter([
               path: "verify/:token", // ✅ Handle verification
               element: <VerifyEmailMessage />,
             },
-           
+            {
+              path: "/send-bill", 
+              element: <SendBill />,
+            },
            
           ],
         },
