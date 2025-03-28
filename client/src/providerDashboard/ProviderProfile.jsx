@@ -100,7 +100,7 @@ function ProviderProfile() {
           <div className="flex flex-col">
             <label className="text-sm font-semibold text-gray-600">Verification Document:</label>
             {profile.document ? (
-              <a href={profile.document.secure_url} target="_blank" rel="noopener noreferrer" className="text-primary flex items-center gap-2">
+              <a href={profile.document} target="_blank" rel="noopener noreferrer" className="text-primary flex items-center gap-2">
                 <FaFileAlt /> View Document
               </a>
             ) : (

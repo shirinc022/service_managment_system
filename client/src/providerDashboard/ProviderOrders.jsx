@@ -115,7 +115,7 @@ export default function ProviderOrdersTable() {
     console.log(selectedOrder._id);
     providerBillGeneration(selectedOrder._id, bill)
       .then((res) => {
-        console.log(res.data.meassage);
+        console.log(res.data.message);
         toast.success("Bill sent successfully");
         closeModal();
         providerBillsent(selectedOrder._id)
@@ -162,14 +162,29 @@ export default function ProviderOrdersTable() {
                 <td className="p-2">{index + 1}</td>
                 <td className="p-2 font-semibold text-base-content">{order.service_id?.title}</td>
                 <td className="p-2 font-semibold text-base-content">{order.customer_id?.name}</td>
-                <td className="p-2">{order.customer_name} <br /> {order.customer_phone} <br /> {order.customer_address}<br /> {order.customer_location}</td>
                 <td className="p-2">
-                  <button className={`font-bold badge ${order.payment === "Paid" ? "badge-success" : "badge-warning"}`}>{order.payment}</button>
+                  {order.customer_name} <br /> {order.customer_phone} <br /> {order.customer_address}<br /> {order.customer_location}
                 </td>
                 <td className="p-2">
-                  <button className={`font-bold badge ${order.status === "Completed" ? "badge-success" : order.status === "Rejected" ? "badge-error" : "badge-warning"}`}>{order.status}</button>
+                  <button className={`font-bold badge ${order.payment === "Paid" ? "badge-success" : "badge-warning"}`}>
+                    {order.payment}
+                  </button>
+                </td>
+                <td className="p-2">
+                  <button className={`font-bold badge ${order.status === "Completed" ? "badge-success" : order.status === "Rejected" ? "badge-error" : "badge-warning"}`}>
+                    {order.status}
+                  </button>
                 </td>
                 <td className="p-2 space-x-2">
+                  {order.status === "Pending" && (
+                    <>
+                      <button onClick={() => handleAccept(order._id)} className="btn btn-success btn-sm">Accept</button>
+                      <button onClick={() => handleReject(order._id)} className="btn btn-error btn-sm">Reject</button>
+                    </>
+                  )}
+                  {order.status === "Accepted" && (
+                    <button onClick={() => handleComplete(order._id)} className="btn btn-warning btn-sm">Mark as Complete</button>
+                  )}
                   {order.payment === "Paid" ? (
                     <button className="btn btn-success btn-sm">Payment Received</button>
                   ) : order.status === "Completed" ? (
