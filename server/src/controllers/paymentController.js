@@ -51,6 +51,9 @@ const paymentWebhook = async (req, res) => {
   // console.log(event.data.object.metadata.orderId);
 
   // signature verification
+
+
+
   const payload = req.body;
   const sig = req.headers["stripe-signature"];
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -106,5 +109,47 @@ const paymentWebhook = async (req, res) => {
 
   res.json({ received: true });
 };
+
+
+
+
+// const paymentWebhook = async (req, res) => {
+//   const payload = req.body;
+//   const sig = req.headers["stripe-signature"];
+//   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+//   let event;
+//   try {
+//     event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
+
+//     if (event.type === "checkout.session.completed") {
+//       const session = event.data.object;
+//       console.log("Payment Success Event!", session);
+
+//       let orderId = session.metadata?.orderId;
+//       let billId = session.metadata?.billId;
+
+//       console.log(`🔹 Extracted Order ID: ${orderId}, Bill ID: ${billId}`);
+
+//       if (!orderId || !billId) {
+//         console.error("Missing orderId or billId in metadata");
+//         return res.status(400).send("Missing orderId or billId");
+//       }
+
+//       // ✅ Update Database
+//       await orderModel.findByIdAndUpdate(orderId, { payment: "Paid" }, { new: true });
+//       await billModel.findByIdAndUpdate(billId, { paymentStatus: "Paid" }, { new: true });
+
+//       console.log(`Order ${orderId} & Bill ${billId} marked as Paid!`);
+//     }
+//   } catch (error) {
+//     console.error("Stripe Webhook Error:", error.message);
+//     return res.status(400).json({ error: error.message || "Internal server error" });
+//   }
+
+//   res.json({ received: true });
+// };
+
+
 
 module.exports = { paymentFunction, paymentWebhook };
