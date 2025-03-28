@@ -124,9 +124,9 @@ export default function CustomerOrdersTable() {
                         <FaTrash /> Delete
                       </button>
                     ) : order.status === "Accepted" ? (
-                      <button className="btn btn-primary btn-sm flex items-center gap-1">
-                        <FaPhone /> Contact
-                      </button>
+                      <a href={`tel:${order.customer_phone}`} className="btn btn-primary btn-sm flex items-center gap-1">
+                      <FaPhone /> Contact
+                    </a>
                     ) :order.status === "Completed" && order.billStatus === "Bill sent" && order.payment === "Pending" ?(
                       <button className="btn btn-primary btn-sm flex items-center gap-1" onClick={()=>navigate(`/bill/${order._id}` )}>
                          Pay Bill Now

@@ -130,7 +130,7 @@ export default function ProviderOrdersTable() {
         closeModal();
         providerBillsent(selectedOrder._id)
           .then((res) => {
-            console.log(res)
+            console.log(res);
             setOrders(
               orders.map((order) =>
                 order._id === selectedOrder._id
@@ -142,7 +142,6 @@ export default function ProviderOrdersTable() {
           .catch((error) => {
             console.log("error", error);
           });
-       
       })
       .catch((error) => {
         console.log("error", error);
@@ -229,13 +228,25 @@ export default function ProviderOrdersTable() {
                     </>
                   )}
                   {order.status === "Accepted" && (
-                    <button
-                      onClick={() => handleComplete(order._id)}
-                      className="btn btn-success btn-sm"
-                    >
-                      Mark as Completed
-                    </button>
+                    <div className="flex gap-2">
+                      {/* Mark as Completed Button */}
+                      <button
+                        onClick={() => handleComplete(order._id)}
+                        className="btn btn-success btn-sm"
+                      >
+                        Mark as Completed
+                      </button>
+
+                      {/* Contact Button */}
+                      <a
+                        href={`tel:${order.customer_phone}`}
+                        className="btn btn-primary btn-sm flex items-center gap-1"
+                      >
+                        <FaPhone /> Contact
+                      </a>
+                    </div>
                   )}
+
                   {order.status === "Completed" && (
                     <button
                       onClick={() => openBillModal(order)}
