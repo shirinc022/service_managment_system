@@ -200,12 +200,21 @@ export default function ProviderOrdersTable() {
   )}
 
   {order.status === "Accepted" && (
-    <button
-      onClick={() => handleComplete(order._id)}
-      className="btn btn-warning btn-sm"
-    >
-      Mark as Complete
-    </button>
+     <div className="flex gap-2">
+     <button
+       onClick={() => handleComplete(order._id)}
+       className="btn btn-warning btn-sm"
+     >
+       Mark as Complete
+     </button>
+     <a
+       href={`tel:${order.customer_phone}`}
+       className="btn btn-info btn-sm"
+     >
+       Contact
+     </a>
+   </div>
+    
   )}
 
   {order.payment === "Paid" ? (
@@ -228,58 +237,7 @@ export default function ProviderOrdersTable() {
           </tbody>
         </table>
       </div>
-       {/* Bill Modal */}
- {/* {isModalOpen && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"> */}
-    {/* <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-      <h3 className="text-lg font-bold mb-4">Send Bill</h3> */}
-      {/* <div className="space-y-3"> */}
-        {/* <input
-          type="number"
-          name="basicAmount"
-          placeholder="Basic Amount"
-          className="input input-bordered w-full"
-          value={bill.basicAmount}
-          onChange={handleBillChange}
-        /> */}
-        {/* <input
-          type="number"
-          name="materialCost"
-          placeholder="Material Cost"
-          className="input input-bordered w-full"
-          value={bill.materialCost}
-          onChange={handleBillChange}
-        /> */}
-        {/* <input
-          type="number"
-          name="extraCharges"
-          placeholder="Other Extra Charges"
-          className="input input-bordered w-full"
-          value={bill.extraCharges}
-          onChange={handleBillChange}
-        /> */}
-        {/* <textarea
-          name="description"
-          placeholder="Description"
-          className="textarea textarea-bordered w-full"
-          value={bill.description}
-          onChange={handleBillChange}
-        ></textarea> */}
-        {/* <div className="text-xl font-bold text-center">
-          Total: ₹ {bill.totalPrice}
-        </div> */}
-      {/* </div> */}
-      {/* <div className="flex justify-between mt-4">
-        <button onClick={closeModal} className="btn btn-outline">
-          Cancel
-        </button>
-        <button onClick={handleSubmitBill} className="btn btn-primary">
-          Submit Bill
-        </button>
-      </div> */}
-    {/* </div> */}
-  {/* </div>
-)} */}
+      
     </div>
   );
 }
