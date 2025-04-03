@@ -62,20 +62,7 @@ function Home() {
         </Link>
       </div>
 
-      {/* Testimonials Section */}
-      {/* <div className="p-10 text-center bg-base-200">
-        <h2 className="text-4xl font-bold mb-6">What Our Clients Say</h2>
-        <div className="carousel w-full">
-          <div className="carousel-item w-full text-center p-5">
-            <p className="text-lg">"Amazing service! Highly recommend."</p>
-            <span className="font-bold">- John Doe</span>
-          </div>
-          <div className="carousel-item w-full text-center p-5">
-            <p className="text-lg">"Professional and efficient. 5 stars!"</p>
-            <span className="font-bold">- Jane Smith</span>
-          </div>
-        </div>
-      </div> */}
+    
     </div>
   );
 }

@@ -39,7 +39,7 @@ function CustomerPayments() {
               <td className="p-4 font-semibold text-base-content">
                 {payment.provider_id?.name || "N/A"}
               </td>
-              <td className="p-4 font-bold text-green-600">${payment.totalPrice.toFixed(2)}</td>
+              <td className="p-4 font-bold text-green-600">₹ {payment.totalPrice.toFixed(2)}</td>
               <td className="p-4">
                 <span
                   className={`badge ${
