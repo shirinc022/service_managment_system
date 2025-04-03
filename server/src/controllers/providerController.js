@@ -299,7 +299,7 @@ const getServices = async (req, res) => {
     const services = await serviceModel
       .find()
       .populate("provider_id")  // Populate the provider details for each service
-      // .populate("reviews");
+   
 
     // Return the services with the populated data
     return res.status(200).json({ message: "Listed All Services", services });

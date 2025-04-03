@@ -10,7 +10,7 @@ function Home() {
         className="hero min-h-screen w-full !p-0"
         style={{
           backgroundImage:
-            "url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp)",
+            "url(https://intownplumbingtx.com/wp-content/uploads/2024/03/what-to-know-about-plumbing-tools-web-img.jpg)",
         }}
       >
         <div className="hero-overlay bg-opacity-60"></div>
