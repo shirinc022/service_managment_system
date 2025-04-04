@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { FaUser, FaStar, FaComment } from "react-icons/fa";
-import { adminGetReviews } from "../services/adminServices";
+import { FaUser, FaStar, FaComment, FaUserTie } from "react-icons/fa";
+import { adminGetReviews } from "../services/userservices";
+
 
 function AdminReviews() {
   const [reviews, setReviews] = useState([]);
@@ -9,7 +10,8 @@ function AdminReviews() {
   useEffect(() => {
     adminGetReviews()
       .then((res) => {
-        setReviews(res.data.reviews);
+        console.log(res)
+        setReviews(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -40,6 +42,12 @@ function AdminReviews() {
                     ))}
                   </div>
                 </div>
+                <div className="flex items-center gap-2 mt-2 text-sm text-gray-700">
+  <FaUserTie className="text-gray-500" />
+  <p>
+    Provider: {review.service_id?.provider_id?.name || "Unknown"}
+  </p>
+</div>
                 <p className="text-gray-600 mt-2">{review.description}</p>
               </div>
             ))}

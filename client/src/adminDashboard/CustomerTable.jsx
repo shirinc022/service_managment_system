@@ -34,7 +34,7 @@ export default function CustomerTable() {
 
   return (
     <div className="overflow-x-auto p-6">
-      <div className="bg-base-100 shadow-xl rounded-xl p-4">
+      <div className="bg-base-100 shadow-xl rounded-xl p-4 min-w-max">
         <h2 className="text-xl font-bold text-center text-primary mb-4">Customer Details</h2>
         <table className="table w-full border border-base-300 rounded-lg overflow-hidden">
           <thead>

@@ -1,4 +1,5 @@
-const { postReview, viewCustomerReview, updateReview, deleteReview, getProviderReviews, listSingleServiceReview } = require('../controllers/reviewController')
+const { postReview, viewCustomerReview, updateReview, deleteReview, getProviderReviews, listSingleServiceReview, viewAllReviewsForAdmin } = require('../controllers/reviewController')
+const authAdmin = require('../middleware/adminAuth')
 const authCustomer = require('../middleware/customerAuth')
 const authProvider = require('../middleware/providerAuth')
 
@@ -17,7 +18,7 @@ reviewRoutes.get('/serviceReviews/:serviceId',listSingleServiceReview)
 
 //get provider review
 reviewRoutes.get('/providerReview',authProvider,getProviderReviews)
-// reviewRoutes.get('/allReview',authAdmin,viewCustomerReview)
+reviewRoutes.get('/allReview',authAdmin,viewAllReviewsForAdmin)
 
 
 

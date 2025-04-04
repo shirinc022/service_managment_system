@@ -17,7 +17,7 @@ function CustomerPayments() {
   }, []);
   return (
     <div className="overflow-x-auto p-6">
-    <div className="bg-base-100 shadow-xl rounded-xl p-4">
+    <div className="bg-base-100 shadow-xl rounded-xl p-4 min-w-max">
       <h2 className="text-xl font-bold text-center text-primary mb-4 flex items-center justify-center gap-2">
         <FaMoneyBillWave className="w-6 h-6" /> Customer Payment Details
       </h2>

@@ -57,7 +57,7 @@ const handleDelete = (providerId) => {
 
 
   return (
-    <div className="overflow-x-auto p-4 sm:p-6">
+    <div className="overflow-x-auto p-4">
       <div className="bg-base-100 shadow-xl rounded-xl p-4">
         <h2 className="text-xl font-bold text-center text-primary mb-4 flex items-center justify-center gap-2">
           <FaUserCheck className="w-6 h-6" /> Provider Details
@@ -106,15 +106,6 @@ const handleDelete = (providerId) => {
         </div>
       </div>
 
-      {/* {selectedDocument && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-2xl">
-            <h3 className="text-lg font-bold mb-4">Verification Document</h3>
-            <iframe src={selectedDocument} className="w-full h-96"></iframe>
-            <button className="btn btn-error mt-4 w-full sm:w-auto" onClick={() => setSelectedDocument(null)}>Close</button>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }

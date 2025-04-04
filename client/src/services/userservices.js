@@ -232,6 +232,11 @@ export const adminChangePassword = (data) =>{
 
 export const adminUpdateProfile = (data) =>{
     return axiosInstance.put('/admin/profile/update',data)
+    
+}
+
+export const adminGetReviews =()=>{
+    return axiosInstance.get('/review/allReview')
 }
 
 // contact

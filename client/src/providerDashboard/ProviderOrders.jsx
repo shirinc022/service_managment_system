@@ -80,69 +80,7 @@ export default function ProviderOrdersTable() {
     navigate("/send-bill", { state: { order } });
   };
 
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [selectedOrder, setSelectedOrder] = useState(null);
-  // const [bill, setBill] = useState({
-  //   basicAmount: "",
-  //   materialCost: "",
-  //   extraCharges: "",
-  //   description: "",
-  //   totalPrice: 0,
-  // });
 
-  // const openBillModal = (order) => {
-  //   setSelectedOrder(order);
-  //   setBill({
-  //     basicAmount: order.price,
-  //     materialCost: "",
-  //     extraCharges: "",
-  //     description: "",
-  //     totalPrice: 0,
-  //   });
-  //   setIsModalOpen(true);
-  // };
-
-  // const closeModal = () => {
-  //   setIsModalOpen(false);
-  // };
-
-  // const handleBillChange = (e) => {
-  //   const { name, value } = e.target;
-  //   const updatedBill = { ...bill, [name]: value };
-  //   const total =
-  //     Number(updatedBill.basicAmount) +
-  //     Number(updatedBill.materialCost) +
-  //     Number(updatedBill.extraCharges);
-  //   updatedBill.totalPrice = total;
-  //   setBill(updatedBill);
-  // };
-
-  // const handleSubmitBill = () => {
-  //   console.log(selectedOrder._id);
-  //   providerBillGeneration(selectedOrder._id, bill)
-  //     .then((res) => {
-  //       console.log(res.data.message);
-  //       toast.success("Bill sent successfully");
-  //       closeModal();
-  //       providerBillsent(selectedOrder._id)
-  //         .then((res) => {
-  //           console.log(res);
-  //           setOrders(
-  //             orders.map((order) =>
-  //               order._id === selectedOrder._id
-  //                 ? { ...order, status: "Bill Sent" }
-  //                 : order
-  //             )
-  //           );
-  //         })
-  //         .catch((error) => {
-  //           console.log("error", error);
-  //         });
-  //     })
-  //     .catch((error) => {
-  //       console.log("error", error);
-  //     });
-  // };
 
   return (
     <div className="overflow-x-auto p-4">
@@ -200,7 +138,7 @@ export default function ProviderOrdersTable() {
   )}
 
   {order.status === "Accepted" && (
-     <div className="flex gap-2">
+     <div className="flex flex-col gap-2">
      <button
        onClick={() => handleComplete(order._id)}
        className="btn btn-warning btn-sm"
@@ -211,7 +149,7 @@ export default function ProviderOrdersTable() {
        href={`tel:${order.customer_phone}`}
        className="btn btn-info btn-sm"
      >
-       Contact
+      <FaPhone /> Contact
      </a>
    </div>
     

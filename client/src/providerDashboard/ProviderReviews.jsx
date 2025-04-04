@@ -13,7 +13,7 @@ function ProviderReviews() {
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Failed to load reviews");
+        
       });
   }, []);
 

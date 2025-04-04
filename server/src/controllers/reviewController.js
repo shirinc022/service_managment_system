@@ -173,6 +173,32 @@ const listSingleServiceReview = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+   
+
+
+const viewAllReviewsForAdmin = async (req, res) => {
+  try {
+    const reviews = await reviewModel
+      .find({})
+      .populate({
+        path: "service_id",
+        populate: {
+          path: "provider_id",
+          model: "Providers", // Replace with your actual provider model name
+        },
+      })
+      .populate("customer_id");
+
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({ message: "No reviews found" });
+    }
+
+    res.status(200).json(reviews);
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 
 
@@ -182,4 +208,5 @@ const listSingleServiceReview = async (req, res) => {
 
 
 
-module.exports = {postReview,viewCustomerReview,updateReview,deleteReview,getProviderReviews,listSingleServiceReview}
+
+module.exports = {postReview,viewCustomerReview,updateReview,deleteReview,getProviderReviews,listSingleServiceReview, viewAllReviewsForAdmin}
