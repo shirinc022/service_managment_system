@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaTrash, FaComment, FaStar, FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
 import {
-    customerdeleteReview,
+  customerdeleteReview,
   customerGetReviews,
   customerUpdateReview,
 } from "../services/userservices";
@@ -24,16 +24,16 @@ function CustomerReviews() {
       });
   }, []);
 
-    const handleDelete = (reviewId) => {
-      customerdeleteReview(reviewId)
-        .then((res) => {
-          toast.success(res.data.message);
-          setReviews(reviews.filter((review) => review._id !== reviewId));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
+  const handleDelete = (reviewId) => {
+    customerdeleteReview(reviewId)
+      .then((res) => {
+        toast.success(res.data.message);
+        setReviews(reviews.filter((review) => review._id !== reviewId));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleEdit = (review) => {
     setEditingReview(review._id);
@@ -66,7 +66,7 @@ function CustomerReviews() {
     <div className="p-4 min-h-screen flex flex-col">
       <div className="bg-base-100 shadow-xl rounded-xl p-4 w-full max-w-6xl mx-auto">
         <h2 className="text-xl font-bold text-center text-primary mb-4 flex items-center justify-center gap-2">
-        <FaComment className="w-6 h-6" /> My Reviews
+          <FaComment className="w-6 h-6" /> My Reviews
         </h2>
 
         <div className="overflow-x-auto">
@@ -145,14 +145,13 @@ function CustomerReviews() {
                       >
                         <FaEdit /> Edit
                       </button>
-                    
                     )}
-                    <button onClick={() => handleDelete(review._id)} className="btn btn-sm btn-error flex items-center gap-1">
+                    <button
+                      onClick={() => handleDelete(review._id)}
+                      className="btn btn-sm btn-error flex items-center gap-1"
+                    >
                       <FaTrash /> Delete
                     </button>
-                    {/* <button className="btn btn-sm btn-error flex items-center gap-1">
-                      <FaTrash /> Delete
-                    </button> */}
                   </td>
                 </tr>
               ))}

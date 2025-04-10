@@ -39,7 +39,7 @@ const adminRegister = async (req, res) => {
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     if (!email || !password) {
       return res.status(400).json({ error: "Please fill all the fields." });
     }
@@ -53,13 +53,15 @@ const adminLogin = async (req, res) => {
       return res.status(400).json({ error: "Invalid password" });
     }
     const token = createToken(adminExist._id, "admin");
-    res.cookie("admin_token",token,{
-      httpOnly: true,       // Prevents client-side access to the cookie
+    res.cookie("admin_token", token, {
+      httpOnly: true, // Prevents client-side access to the cookie
       secure: true, // Cookie is sent over HTTPS only in production
-      sameSite: 'None',     // Allows cookies to be sent across domains
-    })
+      sameSite: "None", // Allows cookies to be sent across domains
+    });
     // res.cookie("Admin_token", token);
-    res.status(200).json({ message: "Admin login successful", user:adminExist });
+    res
+      .status(200)
+      .json({ message: "Admin login successful", user: adminExist });
   } catch (error) {
     console.log(error);
     res
@@ -70,10 +72,10 @@ const adminLogin = async (req, res) => {
 
 const adminLogout = async (req, res) => {
   try {
-    res.clearCookie("admin_token",{
-      httpOnly: true,       // Prevents client-side access to the cookie
+    res.clearCookie("admin_token", {
+      httpOnly: true, // Prevents client-side access to the cookie
       secure: true, // Cookie is sent over HTTPS only in production
-      sameSite: 'None',     // Allows cookies to be sent across domains
+      sameSite: "None", // Allows cookies to be sent across domains
     });
     res.status(200).json({ message: "logout successfully" });
   } catch (error) {
@@ -84,11 +86,15 @@ const adminLogout = async (req, res) => {
   }
 };
 
-const adminVerifyProvider= async (req, res) => {
+const adminVerifyProvider = async (req, res) => {
   try {
-    const {providerId}=req.params
-    const providerExist= await providerModel.findByIdAndUpdate(providerId,{verification_status:"Verified"},{new:true})
-    if(!providerExist){
+    const { providerId } = req.params;
+    const providerExist = await providerModel.findByIdAndUpdate(
+      providerId,
+      { verification_status: "Verified" },
+      { new: true }
+    );
+    if (!providerExist) {
       return res.status(400).json({ error: "provider not found" });
     }
     res.status(200).json({ message: "provider verified successfully" });
@@ -100,11 +106,15 @@ const adminVerifyProvider= async (req, res) => {
   }
 };
 
-const adminRejectProvider =async (req, res) => {
+const adminRejectProvider = async (req, res) => {
   try {
-    const {providerId}=req.params
-    const providerExist= await providerModel.findByIdAndUpdate(providerId,{verification_status:"Rejected"},{new:true})
-    if(!providerExist){
+    const { providerId } = req.params;
+    const providerExist = await providerModel.findByIdAndUpdate(
+      providerId,
+      { verification_status: "Rejected" },
+      { new: true }
+    );
+    if (!providerExist) {
       return res.status(400).json({ error: "provider not found" });
     }
     res.status(200).json({ message: "provider Rejected successfully" });
@@ -115,7 +125,6 @@ const adminRejectProvider =async (req, res) => {
       .json({ error: error.message || "internal server error" });
   }
 };
-
 
 const adminDeleteProvider = async (req, res) => {
   try {
@@ -145,81 +154,70 @@ const adminDeleteCustomer = async (req, res) => {
     const deletedCustomer = await customerModel.findByIdAndDelete(customerId);
 
     if (!deletedCustomer) {
-      return res.status(404).json({ success: false, message: "Customer not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Customer not found" });
     }
 
-    res.status(200).json({ success: true, message: "Customer deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Customer deleted successfully" });
   } catch (error) {
     console.error("Error deleting customer:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
-
-const getCustomers = async(req,res)=>{
-  try{
-
-    const customers= await  customerModel.find()
-    if(!customers){
+const getCustomers = async (req, res) => {
+  try {
+    const customers = await customerModel.find();
+    if (!customers) {
       return res.status(400).json({ error: "customers not found" });
     }
-    res.status(200).json(customers)
-
-
-
+    res.status(200).json(customers);
   } catch (error) {
     console.log(error);
     res
       .status(error.status || 500)
       .json({ error: error.message || "internal server error" });
   }
-}
+};
 
-
-const getProviders = async(req,res)=>{
-  try{
-
-    const providers= await  providerModel.find()
-    if(!providers){
+const getProviders = async (req, res) => {
+  try {
+    const providers = await providerModel.find();
+    if (!providers) {
       return res.status(400).json({ error: "providers not found" });
     }
-    res.status(200).json(providers)
-
-
-
+    res.status(200).json(providers);
   } catch (error) {
     console.log(error);
     res
       .status(error.status || 500)
       .json({ error: error.message || "internal server error" });
   }
-}
+};
 
-
-const getOrdersView = async(req,res)=>{
-  try{
-
-    const orders= await  orderModel.find().populate("Provider_id customer_id service_id")
-    if(!orders){
+const getOrdersView = async (req, res) => {
+  try {
+    const orders = await orderModel
+      .find()
+      .populate("Provider_id customer_id service_id");
+    if (!orders) {
       return res.status(400).json({ error: "orders not found" });
     }
-    res.status(200).json(orders)
-    console.log(orders)
-
-
-
+    res.status(200).json(orders);
+    console.log(orders);
   } catch (error) {
     console.log(error);
     res
       .status(error.status || 500)
       .json({ error: error.message || "internal server error" });
   }
-}
-
+};
 
 const getAdminProfile = async (req, res) => {
   try {
-    
     const admin = await adminDb.findById(req.admin).select("-password");
     res.status(200).json({ admin });
   } catch (error) {
@@ -230,9 +228,15 @@ const getAdminProfile = async (req, res) => {
 const updateAdminProfile = async (req, res) => {
   try {
     const { name } = req.body;
-    const updatedAdmin = await adminDb.findByIdAndUpdate(req.admin, { name }, { new: true});
-    
-    res.status(200).json({ message: "Profile updated successfully." ,updatedAdmin});
+    const updatedAdmin = await adminDb.findByIdAndUpdate(
+      req.admin,
+      { name },
+      { new: true }
+    );
+
+    res
+      .status(200)
+      .json({ message: "Profile updated successfully.", updatedAdmin });
   } catch (error) {
     res.status(500).json({ message: "Error updating profile" });
   }
@@ -251,12 +255,29 @@ const changeAdminPassword = async (req, res) => {
 
 const getAdminReviews = async (req, res) => {
   try {
-    const reviews = await reviewModel.find().populate("customer_id", "name").populate("service_id", "title");
+    const reviews = await reviewModel
+      .find()
+      .populate("customer_id", "name")
+      .populate("service_id", "title");
     res.status(200).json({ reviews });
   } catch (error) {
     res.status(500).json({ message: "Error fetching reviews" });
   }
 };
 
-
-module.exports = { adminRegister, adminLogin, adminLogout , adminVerifyProvider,adminDeleteCustomer,getCustomers,getProviders,getOrdersView, adminRejectProvider,adminDeleteProvider,getAdminProfile, updateAdminProfile, changeAdminPassword, getAdminReviews};
+module.exports = {
+  adminRegister,
+  adminLogin,
+  adminLogout,
+  adminVerifyProvider,
+  adminDeleteCustomer,
+  getCustomers,
+  getProviders,
+  getOrdersView,
+  adminRejectProvider,
+  adminDeleteProvider,
+  getAdminProfile,
+  updateAdminProfile,
+  changeAdminPassword,
+  getAdminReviews,
+};

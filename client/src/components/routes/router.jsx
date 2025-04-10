@@ -77,11 +77,11 @@ export const router  = createBrowserRouter([
               element: <Contact/>,
             },
             {
-              path: "check-email",  // ✅ Show "Check Email" message
+              path: "check-email",  
               element: <CheckEmailMessage />,
             },
             {
-              path: "verify/:token", // ✅ Handle verification
+              path: "verify/:token", 
               element: <VerifyEmailMessage />,
             },
             {

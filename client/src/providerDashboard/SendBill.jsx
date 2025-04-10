@@ -1,6 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { providerBillGeneration, providerBillsent } from "../services/userservices";
+import {
+  providerBillGeneration,
+  providerBillsent,
+} from "../services/userservices";
 import { toast } from "react-toastify";
 
 export default function SendBill() {
@@ -75,7 +78,9 @@ export default function SendBill() {
           value={bill.description}
           onChange={handleBillChange}
         ></textarea>
-        <div className="text-xl font-bold text-center">Total: ₹ {bill.totalPrice}</div>
+        <div className="text-xl font-bold text-center">
+          Total: ₹ {bill.totalPrice}
+        </div>
       </div>
       <div className="flex justify-between mt-4">
         <button onClick={() => navigate(-1)} className="btn btn-outline">

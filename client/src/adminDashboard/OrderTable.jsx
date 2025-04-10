@@ -29,27 +29,52 @@ export default function OrdersTable() {
               <th className="p-4 text-left">Service</th>
               <th className="p-4 text-left">Provider</th>
               <th className="p-4 text-left">Customer</th>
-              <th className="p-4 text-left w-45">Address</th> 
-              <th className="p-4 text-left w-5">Payment</th> 
-              <th className="p-4 text-left w-5">Status</th> 
+              <th className="p-4 text-left w-45">Address</th>
+              <th className="p-4 text-left w-5">Payment</th>
+              <th className="p-4 text-left w-5">Status</th>
             </tr>
           </thead>
           <tbody>
             {orders.map((order, index) => (
-              <tr key={order._id} className="hover:bg-primary/10 border-b border-base-300">
+              <tr
+                key={order._id}
+                className="hover:bg-primary/10 border-b border-base-300"
+              >
                 <td className="p-4">{index + 1}</td>
-                <td className="p-4 font-semibold text-base-content">{order.service_id?.title}</td>
-                <td className="p-4 font-semibold text-base-content">{order.Provider_id?.name}</td>
-                <td className="p-4 text-gray-500">{order.customer_id?.name}</td>
-                <td className="p-4 flex items-center gap-2 w-45"> 
-                  {/* <FaMapMarkerAlt className="text-red-500" />  */}
-                  {order.customer_name} <br/>{order.customer_phone} <br/>{order.customer_address} <br/>{order.customer_location}
+                <td className="p-4 font-semibold text-base-content">
+                  {order.service_id?.title}
                 </td>
-                <td className="p-4 w-5"> 
-                  <button className={`font-bold badge ${order.payment === "Paid" ? "badge-success" : "badge-warning"}`}>{order.payment}</button>
+                <td className="p-4 font-semibold text-base-content">
+                  {order.Provider_id?.name}
+                </td>
+                <td className="p-4 text-gray-500">{order.customer_id?.name}</td>
+                <td className="p-4 flex items-center gap-2 w-45">
+                  {order.customer_name} <br />
+                  {order.customer_phone} <br />
+                  {order.customer_address} <br />
+                  {order.customer_location}
                 </td>
                 <td className="p-4 w-5">
-                  <button className={`font-bold badge ${order.status === "Completed" ? "badge-success" : "badge-info"}`}>{order.status}</button>
+                  <button
+                    className={`font-bold badge ${
+                      order.payment === "Paid"
+                        ? "badge-success"
+                        : "badge-warning"
+                    }`}
+                  >
+                    {order.payment}
+                  </button>
+                </td>
+                <td className="p-4 w-5">
+                  <button
+                    className={`font-bold badge ${
+                      order.status === "Completed"
+                        ? "badge-success"
+                        : "badge-info"
+                    }`}
+                  >
+                    {order.status}
+                  </button>
                 </td>
               </tr>
             ))}

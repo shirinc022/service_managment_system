@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { FaUser, FaKey } from "react-icons/fa";
-import { getCustomerProfile, updateCustomerPassword } from "../services/userservices";
-
+import {
+  getCustomerProfile,
+  updateCustomerPassword,
+} from "../services/userservices";
 
 function CustomerProfile() {
   const [profile, setProfile] = useState({});
@@ -51,7 +53,9 @@ function CustomerProfile() {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-sm font-semibold text-gray-600">Email:</label>
+            <label className="text-sm font-semibold text-gray-600">
+              Email:
+            </label>
             <p className="p-2 bg-gray-100 rounded-lg">{profile.email}</p>
           </div>
         </div>
@@ -85,7 +89,11 @@ function CustomerProfile() {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-full" disabled={loading}>
+          <button
+            type="submit"
+            className="btn btn-primary w-full"
+            disabled={loading}
+          >
             {loading ? "Updating..." : "Update Password"}
           </button>
         </form>

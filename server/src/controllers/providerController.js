@@ -1,8 +1,11 @@
 const orderModel = require("../models/orderModel");
 const providerDb = require("../models/providerModel");
 const serviceModel = require("../models/serviceModel");
-const { createToken, createProviderToken } = require("../utils/generateToken");
-const { uploadToCloudinary, uploadSinglefileToCloudinary } = require("../utils/imageUpload");
+const { createProviderToken } = require("../utils/generateToken");
+const {
+  uploadToCloudinary,
+  uploadSinglefileToCloudinary,
+} = require("../utils/imageUpload");
 const { hashpassword, comparePassword } = require("../utils/passwordUtil");
 
 const providerRegister = async (req, res) => {
@@ -23,7 +26,7 @@ const providerRegister = async (req, res) => {
 
     const hashedPassword = await hashpassword(password);
     const cloudinaryRes = await uploadSinglefileToCloudinary(req.file.path);
-    
+
     console.log(cloudinaryRes, "image uploaded to cloudinary");
     const newProvider = new providerDb({
       name,
@@ -64,18 +67,21 @@ const providerLogin = async (req, res) => {
     if (!passwordMatch) {
       return res.status(400).json({ error: "Invalid password" });
     }
-    const verified=providerExist.verification_status
-    
-    const token = createProviderToken(providerExist._id, "provider",verified);
-    res.cookie("provider_token", token,{
-      httpOnly: true,       // Prevents client-side access to the cookie
+    const verified = providerExist.verification_status;
+    if (verified == "Pending") {
+      return res.status(400).json({ error: "Provider not verified by Admin" });
+    }
+
+    const token = createProviderToken(providerExist._id, "provider", verified);
+    res.cookie("provider_token", token, {
+      httpOnly: true, // Prevents client-side access to the cookie
       secure: true, // Cookie is sent over HTTPS only in production
-      sameSite: 'None',     // Allows cookies to be sent across domains
+      sameSite: "None", // Allows cookies to be sent across domains
     });
-  
+
     res
       .status(200)
-      .json({ message: "Provider login successful", user:providerExist });
+      .json({ message: "Provider login successful", user: providerExist });
   } catch (error) {
     console.log(error);
     res
@@ -86,10 +92,10 @@ const providerLogin = async (req, res) => {
 
 const providerLogout = async (req, res) => {
   try {
-    res.clearCookie("provider_token",{
-      httpOnly: true,       // Prevents client-side access to the cookie
+    res.clearCookie("provider_token", {
+      httpOnly: true, // Prevents client-side access to the cookie
       secure: true, // Cookie is sent over HTTPS only in production
-      sameSite: 'None',     // Allows cookies to be sent across domains
+      sameSite: "None", // Allows cookies to be sent across domains
     });
     res.status(200).json({ message: "logout successfully" });
   } catch (error) {
@@ -116,7 +122,7 @@ const serviceAdd = async (req, res) => {
     console.log(req.body);
     const images = req.files;
     console.log(images);
-    const providerId=req.provider
+    const providerId = req.provider;
     if (
       !title ||
       !category ||
@@ -138,7 +144,7 @@ const serviceAdd = async (req, res) => {
     console.log("Cloudinary response:", cloudinaryRes);
 
     const newService = new serviceModel({
-      provider_id:providerId,
+      provider_id: providerId,
       title,
       category,
       description,
@@ -181,12 +187,9 @@ const serviceUpdate = async (req, res) => {
     // Remove selected images from Cloudinary & database
     if (removeImages) {
       const imagesToRemove = JSON.parse(removeImages);
-      updatedImages = updatedImages.filter((img) => !imagesToRemove.includes(img));
-
-      // Delete images from Cloudinary
-      // for (let img of imagesToRemove) {
-      //   await deleteFromCloudinary(img); // Assuming this function exists
-      // }
+      updatedImages = updatedImages.filter(
+        (img) => !imagesToRemove.includes(img)
+      );
     }
 
     // Append new uploaded images
@@ -215,26 +218,23 @@ const serviceUpdate = async (req, res) => {
     );
 
     console.log("Updated Service:", updatedService);
-    return res.status(200).json({ message: "Service updated successfully", service: updatedService });
+    return res
+      .status(200)
+      .json({
+        message: "Service updated successfully",
+        service: updatedService,
+      });
   } catch (error) {
     console.error(error);
-    res.status(error.status || 500).json({ error: error.message || "Internal server error" });
+    res
+      .status(error.status || 500)
+      .json({ error: error.message || "Internal server error" });
   }
 };
 
-
-
-
-
-
-
-
 const serviceView = async (req, res) => {
   try {
-  
-
     const serviceId = req.params.id;
-  
 
     const service = await serviceModel.findById(serviceId);
     return res.status(200).json({ message: "Service view by ID", service });
@@ -246,15 +246,9 @@ const serviceView = async (req, res) => {
   }
 };
 
-
-
-
 const serviceDelete = async (req, res) => {
   try {
-   
-
     const serviceId = req.params.id;
-   
 
     const service = await serviceModel.findByIdAndDelete(serviceId);
     return res.status(200).json({ message: "Service Deleted Successfully" });
@@ -270,19 +264,15 @@ const serviceDelete = async (req, res) => {
 
 const allProviderServiceView = async (req, res) => {
   try {
-
-    const providerId=req.provider
-
-    
-
+    const providerId = req.provider;
 
     // Find services and populate the provider_id, reviews, and customer details within reviews
-    const services = await serviceModel
-      .find({provider_id:providerId})
-      
+    const services = await serviceModel.find({ provider_id: providerId });
 
     // Return the services with the populated data
-    return res.status(200).json({ message: "Listed provider Services", services });
+    return res
+      .status(200)
+      .json({ message: "Listed provider Services", services });
   } catch (error) {
     console.log(error);
     res
@@ -291,15 +281,10 @@ const allProviderServiceView = async (req, res) => {
   }
 };
 
-
-
 const getServices = async (req, res) => {
   try {
     // Find services and populate the provider_id, reviews, and customer details within reviews
-    const services = await serviceModel
-      .find()
-      .populate("provider_id")  // Populate the provider details for each service
-   
+    const services = await serviceModel.find().populate("provider_id"); // Populate the provider details for each service
 
     // Return the services with the populated data
     return res.status(200).json({ message: "Listed All Services", services });
@@ -313,13 +298,12 @@ const getServices = async (req, res) => {
 
 const getOneService = async (req, res) => {
   try {
-
-    const {serviceId} = req.params
+    const { serviceId } = req.params;
     // Find services and populate the provider_id, reviews, and customer details within reviews
     const service = await serviceModel
       .findById(serviceId)
-      .populate("provider_id")  // Populate the provider details for each service
-      // .populate("reviews");
+      .populate("provider_id"); // Populate the provider details for each service
+    // .populate("reviews");
 
     // Return the services with the populated data
     return res.status(200).json({ message: "Service Details", service });
@@ -330,7 +314,6 @@ const getOneService = async (req, res) => {
       .json({ error: error.message || "Internal server error" });
   }
 };
-
 
 //profile view update
 
@@ -388,24 +371,17 @@ const updateProviderPhone = async (req, res) => {
     provider.phone = phone;
     await provider.save();
 
-    res.status(200).json({ message: "Phone number updated successfully", phone: provider.phone });
+    res
+      .status(200)
+      .json({
+        message: "Phone number updated successfully",
+        phone: provider.phone,
+      });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = {
   providerRegister,
@@ -418,7 +394,7 @@ module.exports = {
   getServices,
   getOneService,
   allProviderServiceView,
-  getProviderProfile, 
+  getProviderProfile,
   updateProviderPassword,
-  updateProviderPhone
+  updateProviderPhone,
 };

@@ -47,7 +47,7 @@ function Signup() {
       setErrors(formErrors);
       return;
     }
-  
+
     let signupFunction;
     switch (values.userType) {
       case "admin":
@@ -63,12 +63,12 @@ function Signup() {
         toast.error("Invalid user type");
         return;
     }
-  
+
     let requestData;
     let config = {}; // Needed for headers in provider signup
-  
+
     if (values.userType === "provider") {
-      // ✅ Use FormData for providers
+      // Use FormData for providers
       requestData = new FormData();
       requestData.append("name", values.name);
       requestData.append("email", values.email);
@@ -76,7 +76,7 @@ function Signup() {
       requestData.append("password", values.password);
       requestData.append("userType", values.userType);
       requestData.append("document", values.document);
-  
+
       // Ensure headers are set for file uploads
       config = {
         headers: { "Content-Type": "multipart/form-data" },
@@ -91,19 +91,19 @@ function Signup() {
         userType: values.userType,
       };
     }
-  
+
     signupFunction(requestData, config) // Send requestData with config
       .then((res) => {
         console.log(res);
-        
+
         console.log(res.data.message);
         toast.success(res.data.message);
-        const token = res.data.token
+        const token = res.data.token;
         if (values.userType === "customer") {
           navigate("/check-email");
         } else {
           dispatch(saveUser(res.data.user));
-          navigate("/login"); // ✅ Redirect admin & provider to login
+          navigate("/login"); // Redirect admin & provider to login
         }
       })
       .catch((err) => {
@@ -113,8 +113,6 @@ function Signup() {
         });
       });
   };
-  
-  
 
   return (
     <div className="hero">
@@ -205,7 +203,9 @@ function Signup() {
                         setValues({ ...values, document: e.target.files[0] })
                       }
                     />
-                    {errors.document && <p className="error">{errors.document}</p>}
+                    {errors.document && (
+                      <p className="error">{errors.document}</p>
+                    )}
                   </>
                 )}
 

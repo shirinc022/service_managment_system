@@ -44,7 +44,9 @@ function Home() {
           <div className="card bg-base-200 shadow-xl p-5 flex items-center">
             <FaWrench className="w-12 h-12 text-primary mb-3" />
             <h3 className="text-xl font-bold">Plumbing</h3>
-            <p>Expert plumbing services for residential and commercial needs.</p>
+            <p>
+              Expert plumbing services for residential and commercial needs.
+            </p>
           </div>
           <div className="card bg-base-200 shadow-xl p-5 flex items-center">
             <FaBroom className="w-12 h-12 text-primary mb-3" />
@@ -61,8 +63,6 @@ function Home() {
           View All Services
         </Link>
       </div>
-
-    
     </div>
   );
 }

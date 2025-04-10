@@ -69,7 +69,7 @@ export default function ProviderServiceListing() {
                 <FaClock className="text-green-500" /> {service.availability}
               </div>
               <p className="text-lg font-bold text-primary mt-1">
-                {service.price}
+              ₹ {service.price}
               </p>
 
               {/* Action Buttons */}

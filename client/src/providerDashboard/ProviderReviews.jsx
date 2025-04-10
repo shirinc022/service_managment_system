@@ -13,7 +13,6 @@ function ProviderReviews() {
       })
       .catch((err) => {
         console.log(err);
-        
       });
   }, []);
 
@@ -27,18 +26,30 @@ function ProviderReviews() {
         {reviews.length > 0 ? (
           <div className="space-y-4">
             {reviews.map((review, index) => (
-              <div key={review._id} className="p-4 border rounded-lg shadow-md bg-gray-50">
+              <div
+                key={review._id}
+                className="p-4 border rounded-lg shadow-md bg-gray-50"
+              >
                 <div className="mb-2">
-                  <p className="text-md font-bold text-primary">{review.service_id?.title || "Service Title Unavailable"}</p>
+                  <p className="text-md font-bold text-primary">
+                    {review.service_id?.title || "Service Title Unavailable"}
+                  </p>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <FaUser className="text-gray-500" />
-                    <p className="text-sm font-semibold">{review.customer_id?.name}</p>
+                    <p className="text-sm font-semibold">
+                      {review.customer_id?.name}
+                    </p>
                   </div>
                   <div className="flex">
                     {[...Array(5)].map((_, i) => (
-                      <FaStar key={i} className={i < review.star ? "text-yellow-500" : "text-gray-300"} />
+                      <FaStar
+                        key={i}
+                        className={
+                          i < review.star ? "text-yellow-500" : "text-gray-300"
+                        }
+                      />
                     ))}
                   </div>
                 </div>

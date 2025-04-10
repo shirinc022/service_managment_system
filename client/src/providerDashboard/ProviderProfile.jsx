@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { FaUser, FaKey, FaFileAlt, FaPhone, FaEdit, FaCheck } from "react-icons/fa";
-import { getProviderProfile, updateProviderPassword, updateProviderPhone } from "../services/userservices";
+import {
+  FaUser,
+  FaKey,
+  FaFileAlt,
+  FaPhone,
+  FaEdit,
+  FaCheck,
+} from "react-icons/fa";
+import {
+  getProviderProfile,
+  updateProviderPassword,
+  updateProviderPhone,
+} from "../services/userservices";
 
 function ProviderProfile() {
   const [profile, setProfile] = useState({});
@@ -66,7 +77,9 @@ function ProviderProfile() {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-sm font-semibold text-gray-600">Email:</label>
+            <label className="text-sm font-semibold text-gray-600">
+              Email:
+            </label>
             <p className="p-2 bg-gray-100 rounded-lg">{profile.email}</p>
           </div>
 
@@ -83,14 +96,20 @@ function ProviderProfile() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                 />
-                <button onClick={handlePhoneUpdate} className="btn btn-sm btn-success">
+                <button
+                  onClick={handlePhoneUpdate}
+                  className="btn btn-sm btn-success"
+                >
                   <FaCheck />
                 </button>
               </div>
             ) : (
               <div className="flex items-center justify-between bg-gray-100 p-2 rounded-lg">
                 <span>{profile.phone}</span>
-                <button onClick={() => setEditingPhone(true)} className="btn btn-sm btn-warning">
+                <button
+                  onClick={() => setEditingPhone(true)}
+                  className="btn btn-sm btn-warning"
+                >
                   <FaEdit />
                 </button>
               </div>
@@ -98,13 +117,22 @@ function ProviderProfile() {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-sm font-semibold text-gray-600">Verification Document:</label>
+            <label className="text-sm font-semibold text-gray-600">
+              Verification Document:
+            </label>
             {profile.document ? (
-              <a href={profile.document} target="_blank" rel="noopener noreferrer" className="text-primary flex items-center gap-2">
+              <a
+                href={profile.document}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary flex items-center gap-2"
+              >
                 <FaFileAlt /> View Document
               </a>
             ) : (
-              <p className="p-2 bg-gray-100 rounded-lg text-red-500">No document uploaded</p>
+              <p className="p-2 bg-gray-100 rounded-lg text-red-500">
+                No document uploaded
+              </p>
             )}
           </div>
         </div>
@@ -138,7 +166,11 @@ function ProviderProfile() {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-full" disabled={loading}>
+          <button
+            type="submit"
+            className="btn btn-primary w-full"
+            disabled={loading}
+          >
             {loading ? "Updating..." : "Update Password"}
           </button>
         </form>

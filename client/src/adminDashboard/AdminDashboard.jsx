@@ -49,7 +49,7 @@ function AdminDashboard() {
         return <OrdersTable />;
       case "profile":
         return <AdminProfile />;
-        case "reviews":
+      case "reviews":
         return <AdminReviews />;
       case "payments":
         return <AdminPayments />;
@@ -88,19 +88,58 @@ function AdminDashboard() {
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Admin Dashboard</h2>
-          <button className="lg:hidden text-white" onClick={() => setSidebarOpen(false)}>
+          <button
+            className="lg:hidden text-white"
+            onClick={() => setSidebarOpen(false)}
+          >
             <FaTimes size={24} />
           </button>
         </div>
         <ul className="space-y-4">
-          <MenuItem label="Providers" icon={<FaUserCheck />} isActive={activeMenu === "provider"} onClick={() => setActiveMenu("provider")} />
-          <MenuItem label="Customers" icon={<FaUsers />} isActive={activeMenu === "customers"} onClick={() => setActiveMenu("customers")} />
-          <MenuItem label="Orders" icon={<FaShoppingCart />} isActive={activeMenu === "order"} onClick={() => setActiveMenu("order")} />
-          <MenuItem label="Reviews" icon={<FaComment />} isActive={activeMenu === "reviews"} onClick={() => setActiveMenu("reviews")} />
+          <MenuItem
+            label="Providers"
+            icon={<FaUserCheck />}
+            isActive={activeMenu === "provider"}
+            onClick={() => setActiveMenu("provider")}
+          />
+          <MenuItem
+            label="Customers"
+            icon={<FaUsers />}
+            isActive={activeMenu === "customers"}
+            onClick={() => setActiveMenu("customers")}
+          />
+          <MenuItem
+            label="Orders"
+            icon={<FaShoppingCart />}
+            isActive={activeMenu === "order"}
+            onClick={() => setActiveMenu("order")}
+          />
+          <MenuItem
+            label="Reviews"
+            icon={<FaComment />}
+            isActive={activeMenu === "reviews"}
+            onClick={() => setActiveMenu("reviews")}
+          />
 
-          <MenuItem label="Payments" icon={<FaCreditCard />} isActive={activeMenu === "payments"} onClick={() => setActiveMenu("payments")} />
-          <MenuItem label="Profile" icon={<FaUser />} isActive={activeMenu === "profile"} onClick={() => setActiveMenu("profile")} />
-          <MenuItem label="Logout" icon={<FaSignOutAlt />} isActive={false} onClick={handleLogout} isLogout />
+          <MenuItem
+            label="Payments"
+            icon={<FaCreditCard />}
+            isActive={activeMenu === "payments"}
+            onClick={() => setActiveMenu("payments")}
+          />
+          <MenuItem
+            label="Profile"
+            icon={<FaUser />}
+            isActive={activeMenu === "profile"}
+            onClick={() => setActiveMenu("profile")}
+          />
+          <MenuItem
+            label="Logout"
+            icon={<FaSignOutAlt />}
+            isActive={false}
+            onClick={handleLogout}
+            isLogout
+          />
         </ul>
       </div>
 
@@ -121,7 +160,10 @@ function AdminDashboard() {
               {breadcrumbMap[activeMenu]}
             </span>
           </div>
-          <button className="lg:hidden text-gray-800" onClick={() => setSidebarOpen(true)}>
+          <button
+            className="lg:hidden text-gray-800"
+            onClick={() => setSidebarOpen(true)}
+          >
             <FaBars size={24} />
           </button>
         </div>

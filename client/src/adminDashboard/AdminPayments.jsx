@@ -1,22 +1,21 @@
-import React from 'react'
+import React from "react";
 import { useEffect, useState } from "react";
 import { FaMoneyBillWave } from "react-icons/fa";
-import { getAdminPayments } from '../services/userservices';
+import { getAdminPayments } from "../services/userservices";
 
 function AdminPayments() {
+  const [payments, setPayments] = useState([]);
 
-    const [payments, setPayments] = useState([]);
-
-    useEffect(() => {
-        getAdminPayments()
-        .then((res) => {
-          console.log(res.data);
-          setPayments(res.data.bills); // Assuming API returns { bills: [...] }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }, []);
+  useEffect(() => {
+    getAdminPayments()
+      .then((res) => {
+        console.log(res.data);
+        setPayments(res.data.bills);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <div className="overflow-x-auto p-6">
       <div className="bg-base-100 shadow-xl rounded-xl p-4 min-w-max">
@@ -36,18 +35,25 @@ function AdminPayments() {
           </thead>
           <tbody>
             {payments.map((payment, index) => (
-              <tr key={payment._id} className="hover:bg-primary/10 border-b border-base-300">
+              <tr
+                key={payment._id}
+                className="hover:bg-primary/10 border-b border-base-300"
+              >
                 <td className="p-4">{index + 1}</td>
                 <td className="p-4 font-semibold text-base-content">
                   {payment.customer_id?.name || "N/A"}
                 </td>
                 <td className="p-4">{payment.provider_id?.name || "N/A"}</td>
                 <td className="p-4">{payment.order_id?.title || "N/A"}</td>
-                <td className="p-4 font-bold text-green-600">₹ {payment.totalPrice.toFixed(2)}</td>
+                <td className="p-4 font-bold text-green-600">
+                  ₹ {payment.totalPrice.toFixed(2)}
+                </td>
                 <td className="p-4">
                   <span
                     className={`badge ${
-                      payment.paymentStatus === "Paid" ? "badge-success" : "badge-warning"
+                      payment.paymentStatus === "Paid"
+                        ? "badge-success"
+                        : "badge-warning"
                     }`}
                   >
                     {payment.paymentStatus}
@@ -66,7 +72,7 @@ function AdminPayments() {
         </table>
       </div>
     </div>
-  )
+  );
 }
 
-export default AdminPayments
+export default AdminPayments;

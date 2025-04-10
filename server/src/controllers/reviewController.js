@@ -2,56 +2,71 @@ const orderModel = require("../models/orderModel");
 const reviewModel = require("../models/reviewModel");
 const serviceModel = require("../models/serviceModel");
 
-const postReview=async (req,res)=>{
-    try{
-      const {orderId}=req.params
-      const customerId=req.customer
-      const {star,description}=req.body
-      
-      const order = await orderModel.findOne({ _id: orderId, customer_id: customerId });
-      console.log(order)
+const postReview = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const customerId = req.customer;
+    const { star, description } = req.body;
+
+    const order = await orderModel.findOne({
+      _id: orderId,
+      customer_id: customerId,
+    });
+    console.log(order);
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
-    const existingReview = await reviewModel.findOne({ order_id:orderId, customer_id:customerId });
+    const existingReview = await reviewModel.findOne({
+      order_id: orderId,
+      customer_id: customerId,
+    });
     if (existingReview) {
-      return res.status(400).json({ message: "You have already reviewed this order." });
+      return res
+        .status(400)
+        .json({ message: "You have already reviewed this order." });
     }
     const newReview = new reviewModel({
-      order_id:orderId,
-      customer_id:customerId,
-      service_id:order.service_id,
+      order_id: orderId,
+      customer_id: customerId,
+      service_id: order.service_id,
       star,
       description,
     });
     await newReview.save();
     const updatedOrder = await orderModel.findByIdAndUpdate(
-            orderId,
-            { reviewStatus: "Reviewed" },
-            { new: true } 
-          );
-    res.status(201).json({ message: "Review submitted successfully", review: newReview, oder: updatedOrder});
-
-
-
-
-    } catch (error) {
+      orderId,
+      { reviewStatus: "Reviewed" },
+      { new: true }
+    );
+    res
+      .status(201)
+      .json({
+        message: "Review submitted successfully",
+        review: newReview,
+        oder: updatedOrder,
+      });
+  } catch (error) {
     console.log(error);
-    res.status(error.status || 500).json({ error: error.message || "internal server error" });
+    res
+      .status(error.status || 500)
+      .json({ error: error.message || "internal server error" });
   }
-}
-
+};
 
 const viewCustomerReview = async (req, res) => {
   try {
     const customerId = req.customer;
 
     // Fetch all reviews for the particular customer
-    const reviews = await reviewModel.find({ customer_id: customerId }).populate('service_id');
+    const reviews = await reviewModel
+      .find({ customer_id: customerId })
+      .populate("service_id");
 
     if (!reviews || reviews.length === 0) {
-      return res.status(404).json({ message: "No reviews found for this customer" });
+      return res
+        .status(404)
+        .json({ message: "No reviews found for this customer" });
     }
 
     res.status(200).json(reviews);
@@ -61,8 +76,6 @@ const viewCustomerReview = async (req, res) => {
   }
 };
 
-
-
 const updateReview = async (req, res) => {
   try {
     const { reviewId } = req.params; // Review ID from request params
@@ -70,10 +83,15 @@ const updateReview = async (req, res) => {
     const { star, description } = req.body; // New review data
 
     // Find the review to check if it belongs to the customer
-    const review = await reviewModel.findOne({ _id: reviewId, customer_id: customerId });
+    const review = await reviewModel.findOne({
+      _id: reviewId,
+      customer_id: customerId,
+    });
 
     if (!review) {
-      return res.status(404).json({ message: "Review not found or unauthorized access" });
+      return res
+        .status(404)
+        .json({ message: "Review not found or unauthorized access" });
     }
 
     // Update review details
@@ -82,7 +100,6 @@ const updateReview = async (req, res) => {
     await review.save();
 
     res.status(200).json({ message: "Review updated successfully", review });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal server error" });
@@ -95,7 +112,10 @@ const deleteReview = async (req, res) => {
     const customerId = req.customer;
 
     // Find the review
-    const review = await reviewModel.findOne({ _id: reviewId, customer_id: customerId });
+    const review = await reviewModel.findOne({
+      _id: reviewId,
+      customer_id: customerId,
+    });
     if (!review) {
       return res.status(404).json({ message: "Review not found" });
     }
@@ -104,16 +124,16 @@ const deleteReview = async (req, res) => {
     await reviewModel.findByIdAndDelete(reviewId);
 
     // Update the order to mark it as "Not Reviewed" (if needed)
-    await orderModel.findByIdAndUpdate(review.order_id, { reviewStatus: "Pending" });
+    await orderModel.findByIdAndUpdate(review.order_id, {
+      reviewStatus: "Pending",
+    });
 
     res.status(200).json({ message: "Review deleted successfully" });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message || "Internal Server Error" });
   }
 };
-
 
 const getProviderReviews = async (req, res) => {
   try {
@@ -123,14 +143,19 @@ const getProviderReviews = async (req, res) => {
     const services = await serviceModel.find({ provider_id: providerId });
 
     if (!services.length) {
-      return res.status(404).json({ message: "No services found for this provider" });
+      return res
+        .status(404)
+        .json({ message: "No services found for this provider" });
     }
 
     // Extract service IDs
-    const serviceIds = services.map(service => service._id);
+    const serviceIds = services.map((service) => service._id);
 
     // Fetch reviews for these services
-    const reviews = await reviewModel.find({ service_id: { $in: serviceIds } }).populate("customer_id", "name email").populate("service_id");
+    const reviews = await reviewModel
+      .find({ service_id: { $in: serviceIds } })
+      .populate("customer_id", "name email")
+      .populate("service_id");
 
     res.status(200).json({ message: "Reviews fetched successfully", reviews });
   } catch (error) {
@@ -139,27 +164,31 @@ const getProviderReviews = async (req, res) => {
   }
 };
 
-
 // Listing reviews and rating for each service in detail page
 
 const listSingleServiceReview = async (req, res) => {
   try {
     const { serviceId } = req.params;
 
-    const service = await serviceModel.findById(serviceId).populate("provider_id");
+    const service = await serviceModel
+      .findById(serviceId)
+      .populate("provider_id");
 
     if (!service) {
       return res.status(404).json({ message: "Service not found" });
     }
 
     // Aggregate reviews for the service
-    const reviews = await reviewModel.find({ service_id: serviceId }).populate("customer_id", "name");
+    const reviews = await reviewModel
+      .find({ service_id: serviceId })
+      .populate("customer_id", "name");
 
     // Calculate average rating
     const totalReviews = reviews.length;
-    const averageRating = totalReviews > 0
-      ? reviews.reduce((sum, review) => sum + review.star, 0) / totalReviews
-      : 0;
+    const averageRating =
+      totalReviews > 0
+        ? reviews.reduce((sum, review) => sum + review.star, 0) / totalReviews
+        : 0;
 
     res.status(200).json({
       service,
@@ -167,14 +196,11 @@ const listSingleServiceReview = async (req, res) => {
       averageRating: averageRating.toFixed(1),
       reviews,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
-   
-
 
 const viewAllReviewsForAdmin = async (req, res) => {
   try {
@@ -200,13 +226,12 @@ const viewAllReviewsForAdmin = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
-
-
-module.exports = {postReview,viewCustomerReview,updateReview,deleteReview,getProviderReviews,listSingleServiceReview, viewAllReviewsForAdmin}
+module.exports = {
+  postReview,
+  viewCustomerReview,
+  updateReview,
+  deleteReview,
+  getProviderReviews,
+  listSingleServiceReview,
+  viewAllReviewsForAdmin,
+};

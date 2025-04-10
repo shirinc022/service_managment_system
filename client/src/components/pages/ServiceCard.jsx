@@ -38,14 +38,18 @@ function ServiceCard({ service }) {
 
           {/* Display Average Rating and Total Reviews */}
           <div className="flex items-center gap-2">
-            <div className="flex">{renderStars(service.averageRating || 0)}</div>
+            <div className="flex">
+              {renderStars(service.averageRating || 0)}
+            </div>
             <span className="text-gray-500 text-sm">
               {service.totalReviews || 0} reviews
             </span>
           </div>
 
           {/* Price */}
-          <p className="font-semibold text-lg text-blue-600">₹ {service.price}</p>
+          <p className="font-semibold text-lg text-blue-600">
+            ₹ {service.price}
+          </p>
 
           {/* Action Button */}
           <div className="card-actions justify-end">

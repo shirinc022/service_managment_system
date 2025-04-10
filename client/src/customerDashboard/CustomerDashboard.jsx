@@ -78,16 +78,45 @@ function CustomerDashboard() {
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Customer Dashboard</h2>
-          <button className="lg:hidden text-white" onClick={() => setSidebarOpen(false)}>
+          <button
+            className="lg:hidden text-white"
+            onClick={() => setSidebarOpen(false)}
+          >
             <FaTimes size={24} />
           </button>
         </div>
         <ul className="space-y-4">
-          <MenuItem label="Orders" icon={<FaShoppingCart />} isActive={activeMenu === "orders"} onClick={() => setActiveMenu("orders")} />
-          <MenuItem label="Reviews" icon={<FaComment />} isActive={activeMenu === "reviews"} onClick={() => setActiveMenu("reviews")} />
-          <MenuItem label="Payments" icon={<FaCreditCard />} isActive={activeMenu === "payments"} onClick={() => setActiveMenu("payments")} />
-          <MenuItem label="Profile" icon={<FaUser />} isActive={activeMenu === "profile"} onClick={() => setActiveMenu("profile")} />
-          <MenuItem label="Logout" icon={<FaSignOutAlt />} isActive={false} onClick={handleLogout} isLogout />
+          <MenuItem
+            label="Orders"
+            icon={<FaShoppingCart />}
+            isActive={activeMenu === "orders"}
+            onClick={() => setActiveMenu("orders")}
+          />
+          <MenuItem
+            label="Reviews"
+            icon={<FaComment />}
+            isActive={activeMenu === "reviews"}
+            onClick={() => setActiveMenu("reviews")}
+          />
+          <MenuItem
+            label="Payments"
+            icon={<FaCreditCard />}
+            isActive={activeMenu === "payments"}
+            onClick={() => setActiveMenu("payments")}
+          />
+          <MenuItem
+            label="Profile"
+            icon={<FaUser />}
+            isActive={activeMenu === "profile"}
+            onClick={() => setActiveMenu("profile")}
+          />
+          <MenuItem
+            label="Logout"
+            icon={<FaSignOutAlt />}
+            isActive={false}
+            onClick={handleLogout}
+            isLogout
+          />
         </ul>
       </div>
 
@@ -104,9 +133,14 @@ function CustomerDashboard() {
             <span className="mx-2">
               <FaChevronRight />
             </span>
-            <span className="text-gray-900 font-semibold">{breadcrumbMap[activeMenu]}</span>
+            <span className="text-gray-900 font-semibold">
+              {breadcrumbMap[activeMenu]}
+            </span>
           </div>
-          <button className="lg:hidden text-gray-800" onClick={() => setSidebarOpen(true)}>
+          <button
+            className="lg:hidden text-gray-800"
+            onClick={() => setSidebarOpen(true)}
+          >
             <FaBars size={24} />
           </button>
         </div>

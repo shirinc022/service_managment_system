@@ -3,14 +3,13 @@ import { toast } from "react-toastify";
 import { FaUser, FaStar, FaComment, FaUserTie } from "react-icons/fa";
 import { adminGetReviews } from "../services/userservices";
 
-
 function AdminReviews() {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     adminGetReviews()
       .then((res) => {
-        console.log(res)
+        console.log(res);
         setReviews(res.data);
       })
       .catch((err) => {
@@ -29,25 +28,38 @@ function AdminReviews() {
         {reviews.length > 0 ? (
           <div className="space-y-4">
             {reviews.map((review) => (
-              <div key={review._id} className="p-4 border rounded-lg shadow-md bg-gray-50">
-                <p className="text-md font-bold text-primary">{review.service_id?.title || "Service Title Unavailable"}</p>
+              <div
+                key={review._id}
+                className="p-4 border rounded-lg shadow-md bg-gray-50"
+              >
+                <p className="text-md font-bold text-primary">
+                  {review.service_id?.title || "Service Title Unavailable"}
+                </p>
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <FaUser className="text-gray-500" />
-                    <p className="text-sm font-semibold">{review.customer_id?.name}</p>
+                    <p className="text-sm font-semibold">
+                      {review.customer_id?.name}
+                    </p>
                   </div>
                   <div className="flex">
                     {[...Array(5)].map((_, i) => (
-                      <FaStar key={i} className={i < review.star ? "text-yellow-500" : "text-gray-300"} />
+                      <FaStar
+                        key={i}
+                        className={
+                          i < review.star ? "text-yellow-500" : "text-gray-300"
+                        }
+                      />
                     ))}
                   </div>
                 </div>
                 <div className="flex items-center gap-2 mt-2 text-sm text-gray-700">
-  <FaUserTie className="text-gray-500" />
-  <p>
-    Provider: {review.service_id?.provider_id?.name || "Unknown"}
-  </p>
-</div>
+                  <FaUserTie className="text-gray-500" />
+                  <p>
+                    Provider:{" "}
+                    {review.service_id?.provider_id?.name || "Unknown"}
+                  </p>
+                </div>
                 <p className="text-gray-600 mt-2">{review.description}</p>
               </div>
             ))}

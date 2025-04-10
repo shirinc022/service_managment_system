@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { customerVerified } from "../../services/userservices";
 
 const VerifyEmailMessage = () => {
-  const { token } = useParams(); 
+  const { token } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,7 +13,7 @@ const VerifyEmailMessage = () => {
       customerVerified(token)
         .then((res) => {
           toast.success(res.data.message);
-          navigate("/login"); 
+          navigate("/login");
         })
         .catch((err) => {
           toast.error(err.response?.data?.message || "Verification failed");

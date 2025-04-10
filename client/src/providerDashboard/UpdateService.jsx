@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaCloudUploadAlt, FaTimes } from "react-icons/fa";
-import { providerGetOneService, providerUpdateService } from "../services/userservices";
+import {
+  providerGetOneService,
+  providerUpdateService,
+} from "../services/userservices";
 import { toast } from "react-toastify";
 
 export default function UpdateService() {
@@ -97,9 +100,15 @@ export default function UpdateService() {
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-base-100 rounded-lg shadow-lg border border-base-300">
-      <h2 className="text-2xl font-bold text-base-content mb-4">Update Service</h2>
+      <h2 className="text-2xl font-bold text-base-content mb-4">
+        Update Service
+      </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4"
+        encType="multipart/form-data"
+      >
         {/* Title */}
         <div>
           <label className="label text-base-content">Title</label>
@@ -198,7 +207,11 @@ export default function UpdateService() {
           <div className="grid grid-cols-4 gap-2 mt-2">
             {imagePreviews.map((src, index) => (
               <div key={index} className="relative">
-                <img src={src} alt="Preview" className="w-16 h-16 rounded-md border border-base-300" />
+                <img
+                  src={src}
+                  alt="Preview"
+                  className="w-16 h-16 rounded-md border border-base-300"
+                />
                 <button
                   type="button"
                   className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full text-xs"
@@ -212,7 +225,10 @@ export default function UpdateService() {
         )}
 
         {/* Submit Button */}
-        <button type="submit" className="btn btn-primary w-full flex items-center gap-2">
+        <button
+          type="submit"
+          className="btn btn-primary w-full flex items-center gap-2"
+        >
           <FaCloudUploadAlt /> Update Service
         </button>
       </form>

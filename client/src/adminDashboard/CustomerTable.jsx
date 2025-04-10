@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { adminGetCustomers, adminDeleteCustomer } from "../services/userservices";
+import {
+  adminGetCustomers,
+  adminDeleteCustomer,
+} from "../services/userservices";
 import { FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 
@@ -18,24 +21,26 @@ export default function CustomerTable() {
   }, []);
 
   const handleDelete = (customerId) => {
-  
-      adminDeleteCustomer(customerId)
-        .then((res) => {
-          console.log(res.data.message);
-          toast.success(res.data.message)
+    adminDeleteCustomer(customerId)
+      .then((res) => {
+        console.log(res.data.message);
+        toast.success(res.data.message);
 
-          setCustomers(customers.filter((customer) => customer._id !== customerId));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    
+        setCustomers(
+          customers.filter((customer) => customer._id !== customerId)
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <div className="overflow-x-auto p-6">
       <div className="bg-base-100 shadow-xl rounded-xl p-4 min-w-max">
-        <h2 className="text-xl font-bold text-center text-primary mb-4">Customer Details</h2>
+        <h2 className="text-xl font-bold text-center text-primary mb-4">
+          Customer Details
+        </h2>
         <table className="table w-full border border-base-300 rounded-lg overflow-hidden">
           <thead>
             <tr className="bg-primary text-white">
@@ -47,9 +52,14 @@ export default function CustomerTable() {
           </thead>
           <tbody>
             {customers.map((customer, index) => (
-              <tr key={customer._id} className="hover:bg-primary/10 border-b border-base-300">
+              <tr
+                key={customer._id}
+                className="hover:bg-primary/10 border-b border-base-300"
+              >
                 <td className="p-4">{index + 1}</td>
-                <td className="p-4 font-semibold text-base-content">{customer.name}</td>
+                <td className="p-4 font-semibold text-base-content">
+                  {customer.name}
+                </td>
                 <td className="p-4 text-sm text-gray-500">{customer.email}</td>
                 <td className="p-4">
                   <button

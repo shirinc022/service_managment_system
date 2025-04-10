@@ -52,8 +52,6 @@ const paymentWebhook = async (req, res) => {
 
   // signature verification
 
-
-
   const payload = req.body;
   const sig = req.headers["stripe-signature"];
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -110,9 +108,6 @@ const paymentWebhook = async (req, res) => {
   res.json({ received: true });
 };
 
-
-
-
 // const paymentWebhook = async (req, res) => {
 //   const payload = req.body;
 //   const sig = req.headers["stripe-signature"];
@@ -149,7 +144,5 @@ const paymentWebhook = async (req, res) => {
 
 //   res.json({ received: true });
 // };
-
-
 
 module.exports = { paymentFunction, paymentWebhook };

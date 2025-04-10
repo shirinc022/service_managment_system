@@ -67,7 +67,6 @@ function ProviderDashboard() {
 
   return (
     <div className="flex min-h-screen relative">
-
       {/* Sidebar Overlay for Mobile */}
       {sidebarOpen && (
         <div
@@ -84,17 +83,51 @@ function ProviderDashboard() {
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Provider Dashboard</h2>
-          <button className="lg:hidden text-white" onClick={() => setSidebarOpen(false)}>
+          <button
+            className="lg:hidden text-white"
+            onClick={() => setSidebarOpen(false)}
+          >
             <FaTimes size={24} />
           </button>
         </div>
         <ul className="space-y-4">
-          <MenuItem label="Orders" icon={<FaShoppingCart />} isActive={activeMenu === "orders"} onClick={() => setActiveMenu("orders")} />
-          <MenuItem label="Services" icon={<FaTools />} isActive={activeMenu === "services"} onClick={() => setActiveMenu("services")} />
-          <MenuItem label="Reviews" icon={<FaComment />} isActive={activeMenu === "reviews"} onClick={() => setActiveMenu("reviews")} />
-          <MenuItem label="Payments" icon={<FaCreditCard />} isActive={activeMenu === "payments"} onClick={() => setActiveMenu("payments")} />
-          <MenuItem label="Profile" icon={<FaUser />} isActive={activeMenu === "profile"} onClick={() => setActiveMenu("profile")} />
-          <MenuItem label="Logout" icon={<FaSignOutAlt />} isActive={false} onClick={handleLogout} isLogout />
+          <MenuItem
+            label="Orders"
+            icon={<FaShoppingCart />}
+            isActive={activeMenu === "orders"}
+            onClick={() => setActiveMenu("orders")}
+          />
+          <MenuItem
+            label="Services"
+            icon={<FaTools />}
+            isActive={activeMenu === "services"}
+            onClick={() => setActiveMenu("services")}
+          />
+          <MenuItem
+            label="Reviews"
+            icon={<FaComment />}
+            isActive={activeMenu === "reviews"}
+            onClick={() => setActiveMenu("reviews")}
+          />
+          <MenuItem
+            label="Payments"
+            icon={<FaCreditCard />}
+            isActive={activeMenu === "payments"}
+            onClick={() => setActiveMenu("payments")}
+          />
+          <MenuItem
+            label="Profile"
+            icon={<FaUser />}
+            isActive={activeMenu === "profile"}
+            onClick={() => setActiveMenu("profile")}
+          />
+          <MenuItem
+            label="Logout"
+            icon={<FaSignOutAlt />}
+            isActive={false}
+            onClick={handleLogout}
+            isLogout
+          />
         </ul>
       </div>
 
@@ -104,12 +137,21 @@ function ProviderDashboard() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center text-gray-600 text-sm flex-wrap">
             <FaHome className="text-blue-500" />
-            <span className="mx-2"><FaChevronRight /></span>
+            <span className="mx-2">
+              <FaChevronRight />
+            </span>
             <span className="text-blue-500 font-semibold">Dashboard</span>
-            <span className="mx-2"><FaChevronRight /></span>
-            <span className="text-gray-900 font-semibold">{breadcrumbMap[activeMenu]}</span>
+            <span className="mx-2">
+              <FaChevronRight />
+            </span>
+            <span className="text-gray-900 font-semibold">
+              {breadcrumbMap[activeMenu]}
+            </span>
           </div>
-          <button className="lg:hidden text-gray-800" onClick={() => setSidebarOpen(true)}>
+          <button
+            className="lg:hidden text-gray-800"
+            onClick={() => setSidebarOpen(true)}
+          >
             <FaBars size={24} />
           </button>
         </div>

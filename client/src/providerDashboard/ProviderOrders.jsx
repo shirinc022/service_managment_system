@@ -3,8 +3,6 @@ import { FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 import {
   providerAcceptOrder,
   providerAllOrders,
-  providerBillGeneration,
-  providerBillsent,
   providerCompletedOrder,
   providerRejectOrder,
 } from "../services/userservices";
@@ -13,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function ProviderOrdersTable() {
   const [orders, setOrders] = useState([]);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     providerAllOrders()
@@ -55,7 +53,7 @@ export default function ProviderOrdersTable() {
         );
       })
       .catch((error) => {
-        console.log("error");
+        console.log("error",error);
       });
   };
 
@@ -80,8 +78,6 @@ export default function ProviderOrdersTable() {
     navigate("/send-bill", { state: { order } });
   };
 
-
-
   return (
     <div className="overflow-x-auto p-4">
       <div className="bg-base-100 shadow-xl rounded-xl p-4 min-w-max">
@@ -102,84 +98,105 @@ export default function ProviderOrdersTable() {
           </thead>
           <tbody>
             {orders.map((order, index) => (
-              <tr key={order._id} className="hover:bg-primary/10 border-b border-base-300">
+              <tr
+                key={order._id}
+                className="hover:bg-primary/10 border-b border-base-300"
+              >
                 <td className="p-2">{index + 1}</td>
-                <td className="p-2 font-semibold text-base-content">{order.service_id?.title}</td>
-                <td className="p-2 font-semibold text-base-content">{order.customer_id?.name}</td>
-                <td className="p-2">
-                  {order.customer_name} <br /> {order.customer_phone} <br /> {order.customer_address}<br /> {order.customer_location}
+                <td className="p-2 font-semibold text-base-content">
+                  {order.service_id?.title}
+                </td>
+                <td className="p-2 font-semibold text-base-content">
+                  {order.customer_id?.name}
                 </td>
                 <td className="p-2">
-                  <button className={`font-bold badge ${order.payment === "Paid" ? "badge-success" : "badge-warning"}`}>
+                  {order.customer_name} <br /> {order.customer_phone} <br />
+                  {order.customer_address}
+                  <br /> {order.customer_location}
+                </td>
+                <td className="p-2">
+                  <button
+                    className={`font-bold badge ${
+                      order.payment === "Paid"
+                        ? "badge-success"
+                        : "badge-warning"
+                    }`}
+                  >
                     {order.payment}
                   </button>
                 </td>
                 <td className="p-2">
-                  <button className={`font-bold badge ${order.status === "Completed" ? "badge-success" : order.status === "Rejected" ? "badge-error" : "badge-warning"}`}>
+                  <button
+                    className={`font-bold badge ${
+                      order.status === "Completed"
+                        ? "badge-success"
+                        : order.status === "Rejected"
+                        ? "badge-error"
+                        : "badge-warning"
+                    }`}
+                  >
                     {order.status}
                   </button>
                 </td>
                 <td className="p-2 space-x-2">
-  {order.status === "Pending" && (
-    <>
-      <button
-        onClick={() => handleAccept(order._id)}
-        className="btn btn-success btn-sm"
-      >
-        Accept
-      </button>
-      <button
-        onClick={() => handleReject(order._id)}
-        className="btn btn-error btn-sm"
-      >
-        Reject
-      </button>
-    </>
-  )}
+                  {order.status === "Pending" && (
+                    <>
+                      <button
+                        onClick={() => handleAccept(order._id)}
+                        className="btn btn-success btn-sm"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={() => handleReject(order._id)}
+                        className="btn btn-error btn-sm"
+                      >
+                        Reject
+                      </button>
+                    </>
+                  )}
 
-  {order.status === "Accepted" && (
-     <div className="flex flex-col gap-2">
-     <button
-       onClick={() => handleComplete(order._id)}
-       className="btn btn-warning btn-sm"
-     >
-       Mark as Complete
-     </button>
-     <a
-       href={`tel:${order.customer_phone}`}
-       className="btn btn-info btn-sm"
-     >
-      <FaPhone /> Contact
-     </a>
-   </div>
-    
-  )}
+                  {order.status === "Accepted" && (
+                    <div className="flex flex-col gap-2">
+                      <button
+                        onClick={() => handleComplete(order._id)}
+                        className="btn btn-warning btn-sm"
+                      >
+                        Mark as Complete
+                      </button>
+                      <a
+                        href={`tel:${order.customer_phone}`}
+                        className="btn btn-info btn-sm"
+                      >
+                        <FaPhone /> Contact
+                      </a>
+                    </div>
+                  )}
 
-  {order.payment === "Paid" ? (
-    <button className="btn btn-success btn-sm">Payment Received</button>
-  ) : order.status === "Completed" ? (
-    order.billStatus === "Bill sent" ? (
-      <button className="btn btn-disabled btn-sm">Bill Sent</button>
-    ) : (
-      <button
-        onClick={() => openBillPage(order)}
-        className="btn btn-info btn-sm"
-      >
-        Send Bill
-      </button>
-    )
-  ) : null}
-</td>
+                  {order.payment === "Paid" ? (
+                    <button className="btn btn-success btn-sm">
+                      Payment Received
+                    </button>
+                  ) : order.status === "Completed" ? (
+                    order.billStatus === "Bill sent" ? (
+                      <button className="btn btn-disabled btn-sm">
+                        Bill Sent
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => openBillPage(order)}
+                        className="btn btn-info btn-sm"
+                      >
+                        Send Bill
+                      </button>
+                    )
+                  ) : null}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      
     </div>
   );
 }
-
-
-
-
